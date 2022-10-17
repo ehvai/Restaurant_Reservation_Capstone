@@ -1,4 +1,4 @@
-### Restaurant Reservation System Capstone Project
+# Restaurant Reservation System Capstone Project
 
 ## Introduction
 
