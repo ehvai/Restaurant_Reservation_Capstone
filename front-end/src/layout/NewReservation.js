@@ -18,11 +18,6 @@ function NewReservation() {
   });
   const history = useHistory();
 
-  async function addNewReservation() {
-    const abortController = new AbortController();
-    return await createReservation(newReservation, abortController.signal);
-  }
-
   const handleChange = (event) => {
     setNewReservation({
       ...newReservation,
@@ -30,12 +25,18 @@ function NewReservation() {
     });
   };
 
-
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    addNewReservation();
-    history.push(`/dashboard?date=${newReservation.reservation_date}`)
-    setNewReservation({ ...initialReservation });
+    const formatReservation = {
+      ...newReservation,
+      people: Number(newReservation.people),
+    };
+    const abortController = new AbortController();
+    await createReservation(formatReservation, abortController.signal);
+    history.push(`/dashboard?date=${newReservation.reservation_date}`);
+    //setNewReservation({ ...initialReservation });
+
+    return () => abortController.abort();
   };
 
   return (
@@ -133,7 +134,7 @@ function NewReservation() {
                 id="people"
                 onChange={handleChange}
                 value={newReservation.people}
-                required
+                required={true}
                 min="1"
               />
             </div>
@@ -144,14 +145,15 @@ function NewReservation() {
             <div className="col-5">
               <button type="submit" className="btn btn-primary mr-2">
                 <span className="oi oi-check"></span>
-                Submit
+                &nbsp;Submit
               </button>
-              <Link to={`/dashboard/`}
+              <Link
+                to={`/dashboard`}
                 type="cancel"
                 className="btn btn-secondary button"
               >
                 <span className="oi oi-x"></span>
-                Cancel
+                &nbsp;Cancel
               </Link>
             </div>
           </div>
