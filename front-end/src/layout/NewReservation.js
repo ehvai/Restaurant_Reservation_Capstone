@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { createReservation } from "../utils/api";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import "../App.css";
 
 const initialReservation = {
@@ -16,6 +16,7 @@ function NewReservation() {
   const [newReservation, setNewReservation] = useState({
     ...initialReservation,
   });
+  const history = useHistory();
 
   async function addNewReservation() {
     const abortController = new AbortController();
@@ -33,6 +34,7 @@ function NewReservation() {
   const handleSubmit = (event) => {
     event.preventDefault();
     addNewReservation();
+    history.push(`/dashboard?date=${newReservation.reservation_date}`)
     setNewReservation({ ...initialReservation });
   };
 
@@ -140,7 +142,7 @@ function NewReservation() {
         <div>
           <div className="row">
             <div className="col-5">
-              <button type="button" className="btn btn-primary mr-2">
+              <button type="submit" className="btn btn-primary mr-2">
                 <span className="oi oi-check"></span>
                 Submit
               </button>
