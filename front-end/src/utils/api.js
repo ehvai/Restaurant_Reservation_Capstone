@@ -67,3 +67,28 @@ export async function listReservations(params, signal) {
     .then(formatReservationDate)
     .then(formatReservationTime);
 }
+
+export async function listReservationsByDate(params, signal) {
+  const url = new URL(`${API_BASE_URL}/dashboard?date=${params.reservation_date}`);
+  Object.entries(params).forEach(([key, value]) =>
+    url.searchParams.append(key, value.toString())
+  );
+  return await fetchJson(url, { headers, signal }, [])
+    .then(formatReservationDate)
+    .then(formatReservationTime);
+}
+
+/**
+ * Creates a new reservation
+ */
+
+export async function createReservation(newReservation, signal){
+  const url = new URL(`${API_BASE_URL}/reservations`)
+  const options={
+    method: "POST",
+    headers,
+    body: JSON.stringify({data: newReservation}),
+    signal,
+  }
+  return await fetchJson(url, options, newReservation)
+}
