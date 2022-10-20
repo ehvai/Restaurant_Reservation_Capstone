@@ -34,8 +34,6 @@ function NewReservation() {
     const abortController = new AbortController();
     await createReservation(formatReservation, abortController.signal);
     history.push(`/dashboard?date=${newReservation.reservation_date}`);
-    //setNewReservation({ ...initialReservation });
-
     return () => abortController.abort();
   };
 
