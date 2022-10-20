@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { createReservation } from "../utils/api";
-import { Link, useHistory } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import "../App.css";
 
 const initialReservation = {
@@ -36,6 +36,11 @@ function NewReservation() {
     history.push(`/dashboard?date=${newReservation.reservation_date}`);
     return () => abortController.abort();
   };
+
+  const handleCancel  = (event) =>{
+    event.preventDefault();
+    history.push("/dashboard")
+  }
 
   return (
     <div>
@@ -145,14 +150,14 @@ function NewReservation() {
                 <span className="oi oi-check"></span>
                 &nbsp;Submit
               </button>
-              <Link
-                to={`/dashboard`}
-                type="cancel"
+              <button
+                type="button"
                 className="btn btn-secondary button"
+                onClick={handleCancel}
               >
                 <span className="oi oi-x"></span>
                 &nbsp;Cancel
-              </Link>
+              </button>
             </div>
           </div>
         </div>
