@@ -18,6 +18,9 @@ function NewReservation() {
   });
   const history = useHistory();
 
+  // handles APi error messages
+  const [error, setError] = useState(null);
+
   const handleChange = (event) => {
     setNewReservation({
       ...newReservation,
@@ -27,20 +30,25 @@ function NewReservation() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    const formatReservation = {
-      ...newReservation,
-      people: Number(newReservation.people),
-    };
-    const abortController = new AbortController();
-    await createReservation(formatReservation, abortController.signal);
-    history.push(`/dashboard?date=${newReservation.reservation_date}`);
-    return () => abortController.abort();
+    setError(null);
+    try {
+      const formatReservation = {
+        ...newReservation,
+        people: Number(newReservation.people),
+      };
+      const abortController = new AbortController();
+      await createReservation(formatReservation, abortController.signal);
+      history.push(`/dashboard?date=${newReservation.reservation_date}`);
+      return () => abortController.abort();
+    } catch (error) {
+      setError(error.message);
+    }
   };
 
-  const handleCancel  = (event) =>{
+  const handleCancel = (event) => {
     event.preventDefault();
-    history.push("/dashboard")
-  }
+    history.push("/dashboard");
+  };
 
   return (
     <div>
@@ -48,6 +56,14 @@ function NewReservation() {
         <h1>Create Reservation</h1>
       </div>
       <form onSubmit={handleSubmit}>
+        {error && (
+          <div className="alert alert-danger">
+            <p>Please fix the following errors:</p>
+            <ul>
+              <li>{error}</li>
+            </ul>
+          </div>
+        )}
         <div className="row createRes">
           <div className="form-group col">
             <div>
