@@ -4,6 +4,7 @@
 
 const service = require("./reservations.service");
 const asyncErrorBoundary = require("../errors/asyncErrorBoundary");
+const P = require("pino");
 
 const REQUIRED_PROPERTIES = [
   "first_name",
@@ -47,46 +48,71 @@ function hasProperties(properties) {
   };
 }
 
-const hasRequiredProperties = hasProperties(REQUIRED_PROPERTIES)
+const hasRequiredProperties = hasProperties(REQUIRED_PROPERTIES);
+
 const dateFormat = /^\d\d\d\d-\d\d-\d\d$/;
 const timeFormat = /^\d\d:\d\d$/;
 
-function dateIsValid(dateString){
-  return dateString.match(dateFormat)?.[0]
+function dateIsValid(dateString) {
+  return dateString.match(dateFormat)?.[0];
 }
 
-function timeIsValid(timeString){
-  return timeString.match(timeFormat)?.[0]
+function timeIsValid(timeString) {
+  return timeString.match(timeFormat)?.[0];
 }
 
-function hasValidValues(req, res, next){
+function isBeforeToday(date) {
+  const today = new Date()
+  return date < today
+}
+
+function isTuesday(date) {
+  return date.getDay() === 1
+}
+
+function hasValidValues(req, res, next) {
   const { reservation_date, reservation_time, people } = req.body.data;
+  const day = new Date(reservation_date)
 
-  if(!timeIsValid(reservation_time)){
+  if (!timeIsValid(reservation_time)) {
     return next({
       status: 400,
-      message: "reservation_time must be in HH:MM:ss format"
-    })
+      message: "reservation_time must be in HH:MM:ss format",
+    });
   }
-  if(!dateIsValid(reservation_date)){
+  if (!dateIsValid(reservation_date)) {
     return next({
       status: 400,
-      message: "reservation_date must be in YYYY-MM-DD format"
-    })
+      message: "reservation_date must be in YYYY-MM-DD format",
+    });
   }
-  if(typeof people !== "number"){
+  if (typeof people !== "number") {
     return next({
       status: 400,
-      message: "people must be a number"
-    })
+      message: "people must be a number",
+    });
   }
-  if(people < 1){
+  if (people < 1) {
     return next({
       status: 400,
-      message: "# of people must be greater than 1"
-    })
+      message: "# of people must be greater than 1",
+    });
   }
- next();
+  if (isBeforeToday(day)) {
+    return next({
+      status: 400,
+      message: "reservation_date must not be in the past",
+    });
+  }
+  if (isTuesday(day)) {
+    return next({
+      status: 400,
+      message: "restaurant closed on Tuesdays",
+    });
+  }
+
+
+  next();
 }
 
 async function list(req, res) {
@@ -101,5 +127,10 @@ async function create(req, res) {
 
 module.exports = {
   list: [asyncErrorBoundary(list)],
-  create: [hasOnlyValidProperties, hasRequiredProperties, hasValidValues, asyncErrorBoundary(create)],
+  create: [
+    hasOnlyValidProperties,
+    hasRequiredProperties,
+    hasValidValues,
+    asyncErrorBoundary(create),
+  ],
 };
