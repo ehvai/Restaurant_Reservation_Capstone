@@ -31,6 +31,7 @@ function NewReservation() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     setError(null);
+    console.log(newReservation.reservation_date)
     try {
       const formatReservation = {
         ...newReservation,

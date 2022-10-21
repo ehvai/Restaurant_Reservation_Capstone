@@ -61,19 +61,28 @@ function timeIsValid(timeString) {
   return timeString.match(timeFormat)?.[0];
 }
 
-function isBeforeToday(date) {
-  const today = new Date()
+function removeTime(date = new Date()){
+  return new Date(date.getFullYear(), date.getMonth(), date.getDate());
+}
+function removeDate(date){
+  return date.getHours()+":"+date.getMinutes();
+}
+
+function isBeforeToday(date, today) {
   return date < today
 }
 
 function isTuesday(date) {
-  return date.getDay() === 1
+  return date.getDay() === 2
 }
 
 function hasValidValues(req, res, next) {
   const { reservation_date, reservation_time, people } = req.body.data;
-  const day = new Date(reservation_date)
-
+  const [year, month, day] = reservation_date.split('-')
+  const resDay = new Date(+year, +month -1, +day)
+  const todayDate = removeTime(new Date())
+  const curTime = removeDate(new Date())
+  
   if (!timeIsValid(reservation_time)) {
     return next({
       status: 400,
@@ -98,19 +107,36 @@ function hasValidValues(req, res, next) {
       message: "# of people must be greater than 1",
     });
   }
-  if (isBeforeToday(day)) {
+  if (isBeforeToday(resDay, todayDate)) {
     return next({
       status: 400,
       message: "reservation_date must not be in the past",
     });
   }
-  if (isTuesday(day)) {
+  if (isTuesday(resDay)) {
     return next({
       status: 400,
       message: "restaurant closed on Tuesdays",
     });
   }
-
+  if (reservation_time < "10:30") {
+    return next({
+      status: 400,
+      message: "restaurant is not open until 10:30AM",
+    });
+  }
+  if(reservation_time < curTime){
+    return next({
+      status: 400,
+      message: 'cannot schedule a reservation before now'
+    })
+  }
+  if (reservation_time > "21:30"){
+    return next({
+      status: 400,
+      message: 'cannot schedule a reservation after 9:30pm'
+    })
+  }
 
   next();
 }
