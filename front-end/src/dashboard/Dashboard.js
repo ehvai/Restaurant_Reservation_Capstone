@@ -35,6 +35,7 @@ function Dashboard({ date }) {
     return () => abortController.abort();
   }
 
+  // mapping through the reservation list to create the table of selected day reservations based on loadDashboard results
   const reservationList = reservations.map((reservation) => {
     return (
       <tr key={reservation.reservation_id}>
@@ -50,6 +51,8 @@ function Dashboard({ date }) {
       </tr>
     );
   });
+
+  // Previous, Today and Next button functionality 
   const handlePrevious = (event) => {
     event.preventDefault();
     history.push(`/dashboard?date=${previous(dashDate)}`);
