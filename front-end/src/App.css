@@ -15,3 +15,13 @@ flex: 1;
 form input {
 flex: 2;
   }
+
+.dashTitle {
+  display: flex;
+  justify-content: center
+}
+
+.dashHeading{
+  flex: 2
+}
+

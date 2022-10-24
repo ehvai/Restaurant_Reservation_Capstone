@@ -12,4 +12,6 @@ router.route("/").get(controller.list).all(methodNotAllowed);
 
 router.route("/new").post(controller.create).all(methodNotAllowed);
 
+router.route("/:reservation_id/seat").get(controller.read).all(methodNotAllowed)
+
 module.exports = router;

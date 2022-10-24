@@ -58,6 +58,8 @@ async function fetchJson(url, options, onCancel) {
  *  a promise that resolves to a possibly empty array of reservation saved in the database.
  */
 
+// List functions
+
 export async function listReservations(params, signal) {
   const url = new URL(`${API_BASE_URL}/reservations`);
   Object.entries(params).forEach(([key, value]) =>
@@ -68,42 +70,52 @@ export async function listReservations(params, signal) {
     .then(formatReservationTime);
 }
 
-export async function listReservationsByDate(params, signal) {
-  const url = new URL(`${API_BASE_URL}/dashboard?date=${params.reservation_date}`);
+export async function listTables(params, signal) {
+  const url = new URL(`${API_BASE_URL}/tables`);
   Object.entries(params).forEach(([key, value]) =>
     url.searchParams.append(key, value.toString())
   );
+  return await fetchJson(url, { headers, signal }, []);
+}
+
+/**
+ * Read functions
+*/
+
+export async function readReservation(reservation_id, signal) {
+  const url = new URL(`${API_BASE_URL}/reservations/${reservation_id}/seat`);
+
   return await fetchJson(url, { headers, signal }, [])
     .then(formatReservationDate)
     .then(formatReservationTime);
 }
 
 /**
- * Creates a new reservation
+ * Create functions
  */
 
-export async function createReservation(newReservation, signal){
-  const url = new URL(`${API_BASE_URL}/reservations`)
-  const options={
+export async function createReservation(newReservation, signal) {
+  const url = new URL(`${API_BASE_URL}/reservations/new`);
+  const options = {
     method: "POST",
     headers,
-    body: JSON.stringify({data: newReservation}),
+    body: JSON.stringify({ data: newReservation }),
     signal,
-  }
-  return await fetchJson(url, options, newReservation)
+  };
+  return await fetchJson(url, options, newReservation);
 }
 
 /**
  * Creates a new table
  */
 
-export async function createTable(newTable, signal){
-  const url = new URL(`${API_BASE_URL}/tables`)
-  const options={
+export async function createTable(newTable, signal) {
+  const url = new URL(`${API_BASE_URL}/tables/new`);
+  const options = {
     method: "POST",
     headers,
-    body: JSON.stringify({data: newTable}),
+    body: JSON.stringify({ data: newTable }),
     signal,
-  }
-  return await fetchJson(url, options, newTable)
+  };
+  return await fetchJson(url, options, newTable);
 }

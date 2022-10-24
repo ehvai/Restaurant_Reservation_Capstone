@@ -4,6 +4,9 @@
 
  const service = require("./reservations.service");
  const asyncErrorBoundary = require("../errors/asyncErrorBoundary");
+ const hasOnlyValidProperties = require("../validations/hasOnlyValidProperties")
+ const hasProperties = require("../validations/hasProperties")
+ const reservationIdExists = require("../validations/reservationIdExists")
  
  const REQUIRED_PROPERTIES = [
    "first_name",
@@ -13,39 +16,6 @@
    "reservation_time",
    "people",
  ];
- 
- function hasOnlyValidProperties(req, res, next) {
-   const { data = {} } = req.body;
-   const invalidStatuses = Object.keys(data).filter(
-     (field) => !REQUIRED_PROPERTIES.includes(field)
-   );
-   if (invalidStatuses.length) {
-     return next({
-       status: 400,
-       message: `Invalid field(s): ${invalidStatuses.join(", ")}`,
-     });
-   }
-   next();
- }
- 
- function hasProperties(properties) {
-   return function (req, res, next) {
-     const { data = {} } = req.body;
- 
-     try {
-       properties.forEach((property) => {
-         if (!data[property]) {
-           const error = new Error(`A '${property}' property is required.`);
-           error.status = 400;
-           throw error;
-         }
-       });
-       next();
-     } catch (error) {
-       next(error);
-     }
-   };
- }
  
  const hasRequiredProperties = hasProperties(REQUIRED_PROPERTIES);
  
@@ -103,7 +73,7 @@
    if (people < 1) {
      return next({
        status: 400,
-       message: "# of people must be greater than 1",
+       message: "# of people must be greater than 0",
      });
    }
    if (isBeforeToday(resDay, todayDate)) {
@@ -149,6 +119,10 @@
    const reservation = await service.create(req.body.data);
    res.status(201).json({ data: reservation });
  }
+
+ async function read(req, res){
+  res.json({ data: res.locals.reservation })
+ }
  
  module.exports = {
    list: [asyncErrorBoundary(list)],
@@ -158,4 +132,5 @@
      hasValidValues,
      asyncErrorBoundary(create),
    ],
+   read: [asyncErrorBoundary(reservationIdExists), read]
  };
