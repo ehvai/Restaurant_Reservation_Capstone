@@ -1,16 +1,55 @@
 import React from "react";
 
-function ReservationForm({
-  formName,
-  handleSubmit,
-  handleChange,
-  handleCancel,
-  reservation,
-  reservationId = "",
-}) {
+const initialReservation = {
+  first_name: "",
+  last_name: "",
+  mobile_number: "",
+  reservation_date: "",
+  reservation_time: "",
+  people: "",
+};
+
+function NewReservation() {
+  const [newReservation, setNewReservation] = useState({
+    ...initialReservation,
+  });
+  const history = useHistory();
+
+  const handleChange = (event) => {
+    setNewReservation({
+      ...newReservation,
+      [event.target.name]: event.target.value,
+    });
+  };
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    const formatReservation = {
+      ...newReservation,
+      people: Number(newReservation.people),
+    };
+    const abortController = new AbortController();
+    await createReservation(formatReservation, abortController.signal);
+    history.push(`/dashboard?date=${newReservation.reservation_date}`);
+    return () => abortController.abort();
+  };
+
+  const handleCancel  = (event) =>{
+    event.preventDefault();
+    history.push("/dashboard")
+  }
+
   return (
     <div>
       <form onSubmit={handleSubmit}>
+        {error && (
+          <div className="alert alert-danger">
+            <p>Please fix the following errors:</p>
+            <ul>
+              <li>{error}</li>
+            </ul>
+          </div>
+        )}
         <div className="row createRes">
           <div className="form-group col">
             <div>

@@ -107,7 +107,7 @@ export async function createReservation(newReservation, signal) {
  */
 
 export async function createTable(newTable, signal) {
-  const url = new URL(`${API_BASE_URL}/tables`);
+  const url = new URL(`${API_BASE_URL}/tables/new`);
   const options = {
     method: "POST",
     headers,
