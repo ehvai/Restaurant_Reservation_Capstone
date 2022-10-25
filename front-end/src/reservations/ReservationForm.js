@@ -1,7 +1,4 @@
-import React, { useState } from "react";
-import { createReservation } from "../utils/api";
-import { useHistory } from "react-router-dom";
-import "../App.css";
+import React from "react";
 
 const initialReservation = {
   first_name: "",
@@ -18,9 +15,6 @@ function NewReservation() {
   });
   const history = useHistory();
 
-  // handles APi error messages
-  const [error, setError] = useState(null);
-
   const handleChange = (event) => {
     setNewReservation({
       ...newReservation,
@@ -30,32 +24,23 @@ function NewReservation() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    setError(null);
-    console.log(newReservation.reservation_date)
-    try {
-      const formatReservation = {
-        ...newReservation,
-        people: Number(newReservation.people),
-      };
-      const abortController = new AbortController();
-      await createReservation(formatReservation, abortController.signal);
-      history.push(`/dashboard?date=${newReservation.reservation_date}`);
-      return () => abortController.abort();
-    } catch (error) {
-      setError(error.message);
-    }
+    const formatReservation = {
+      ...newReservation,
+      people: Number(newReservation.people),
+    };
+    const abortController = new AbortController();
+    await createReservation(formatReservation, abortController.signal);
+    history.push(`/dashboard?date=${newReservation.reservation_date}`);
+    return () => abortController.abort();
   };
 
-  const handleCancel = (event) => {
+  const handleCancel  = (event) =>{
     event.preventDefault();
-    history.push("/dashboard");
-  };
+    history.push("/dashboard")
+  }
 
   return (
     <div>
-      <div>
-        <h1>Create Reservation</h1>
-      </div>
       <form onSubmit={handleSubmit}>
         {error && (
           <div className="alert alert-danger">
@@ -75,8 +60,12 @@ function NewReservation() {
                 name="first_name"
                 id="first_name"
                 onChange={handleChange}
-                value={newReservation.first_name}
-                placeholder="First Name"
+                value={reservation.first_name}
+                placeholder={
+                  (formName = "New Reservation"
+                    ? "First Name"
+                    : `${reservation.first_name}`)
+                }
                 required={true}
               />
             </div>
@@ -90,8 +79,12 @@ function NewReservation() {
                 name="last_name"
                 id="last_name"
                 onChange={handleChange}
-                value={newReservation.last_name}
-                placeholder="Last Name"
+                value={reservation.last_name}
+                placeholder={
+                  (formName = "New Reservation"
+                    ? "Last Name"
+                    : `${reservation.last_name}`)
+                }
                 required={true}
               />
             </div>
@@ -105,8 +98,12 @@ function NewReservation() {
                 name="mobile_number"
                 id="mobile_number"
                 onChange={handleChange}
-                value={newReservation.mobile_number}
-                placeholder="Mobile Number"
+                value={reservation.mobile_number}
+                placeholder={
+                  (formName = "New Reservation"
+                    ? "Mobile Number"
+                    : `${reservation.mobile_number}`)
+                }
                 required={true}
               />
             </div>
@@ -123,7 +120,12 @@ function NewReservation() {
                 name="reservation_date"
                 id="reservation_date"
                 onChange={handleChange}
-                value={newReservation.reservation_date}
+                value={reservation.reservation_date}
+                placeholder={
+                  (formName = "New Reservation"
+                    ? ""
+                    : `${reservation.reservation_date}`)
+                }
                 required={true}
               />
             </div>
@@ -138,7 +140,12 @@ function NewReservation() {
                 name="reservation_time"
                 id="reservation_time"
                 onChange={handleChange}
-                value={newReservation.reservation_time}
+                value={reservation.reservation_time}
+                placeholder={
+                  (formName = "New Reservation"
+                    ? ""
+                    : `${reservation.reservation_time}`)
+                }
                 required={true}
               />
             </div>
@@ -153,7 +160,10 @@ function NewReservation() {
                 name="people"
                 id="people"
                 onChange={handleChange}
-                value={newReservation.people}
+                value={reservation.people}
+                placeholder={
+                  (formName = "New Reservation" ? "" : `${reservation.people}`)
+                }
                 required={true}
                 min="1"
               />
@@ -183,4 +193,4 @@ function NewReservation() {
   );
 }
 
-export default NewReservation;
+export default ReservationForm;

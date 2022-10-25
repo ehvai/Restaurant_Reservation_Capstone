@@ -1,11 +1,16 @@
+// react and functional imports
 import React from "react";
-
 import { Redirect, Route, Switch } from "react-router-dom";
-import Dashboard from "../dashboard/Dashboard";
-import NewReservation from "./NewReservation";
-import NotFound from "./NotFound";
 import { today } from "../utils/date-time";
 import useQuery from "../utils/useQuery";
+import NotFound from "./NotFound";
+
+// file imports
+import Dashboard from "../dashboard/Dashboard";
+import NewReservation from "../reservations/NewReservation";
+import NewTable from "../tables/NewTable"
+import Seat from "../components/Seat"
+
 
 /**
  * Defines all the routes for the application.
@@ -27,6 +32,15 @@ function Routes() {
       </Route>
       <Route path="/reservations/new">
         <NewReservation />
+      </Route>
+      <Route exact={true} path="/tables">
+        <Redirect to={"/dashboard"} />
+      </Route>
+      <Route path="/tables/new">
+        <NewTable />
+      </Route>
+      <Route path="/reservations/:reservation_id/seat">
+        <Seat />
       </Route>
       <Route path="/dashboard">
         <Dashboard date={date ? date: today()} />
