@@ -1,9 +1,10 @@
 const service = require("../tables/tables.service");
 
 async function tableIdExists(req, res, next) {
-  const tables = await service.read(req.params.table_id);
+  const tableId = (req.params.table_id !=null ? req.params.table_id : req.body.data.table_id)
+  const tables = await service.read(tableId);
 
-  if (reservation) {
+  if (tables) {
     res.locals.tables = tables;
     return next();
   }

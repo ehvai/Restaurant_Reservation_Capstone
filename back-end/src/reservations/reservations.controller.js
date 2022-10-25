@@ -4,7 +4,6 @@
 
  const service = require("./reservations.service");
  const asyncErrorBoundary = require("../errors/asyncErrorBoundary");
- const hasOnlyValidProperties = require("../validations/hasOnlyValidProperties")
  const hasProperties = require("../validations/hasProperties")
  const reservationIdExists = require("../validations/reservationIdExists")
  
@@ -18,6 +17,20 @@
  ];
  
  const hasRequiredProperties = hasProperties(REQUIRED_PROPERTIES);
+
+ function hasOnlyValidProperties(req, res, next) {
+  const { data = {} } = req.body;
+  const invalidStatuses = Object.keys(data).filter(
+    (field) => !REQUIRED_PROPERTIES.includes(field)
+  );
+  if (invalidStatuses.length) {
+    return next({
+      status: 400,
+      message: `Invalid field(s): ${invalidStatuses.join(", ")}`,
+    });
+  }
+  next();
+}
  
  const dateFormat = /^\d\d\d\d-\d\d-\d\d$/;
  const timeFormat = /^\d\d:\d\d$/;

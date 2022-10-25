@@ -1,15 +1,16 @@
 const service = require("../reservations/reservations.service");
 
 async function reservationIdExists(req, res, next) {
-  const reservation = await service.read(req.params.reservation_id);
+  const resId = (req.params.reservation_id !=null ? req.params.reservation_id : req.body.data.reservation_id)
+  const reservation = await service.read(resId);
 
   if (reservation) {
     res.locals.reservation = reservation;
     return next();
   }
   return next({
-    status: 400,
-    message: "reservation_id does not exist",
+    status: 404,
+    message: "999",
   });
 }
 
