@@ -36,7 +36,7 @@ function NewTable() {
 
   const handleCancel = (event) => {
     event.preventDefault();
-    history.push("/dashboard");
+    history.goBack();
   };
 
   return (

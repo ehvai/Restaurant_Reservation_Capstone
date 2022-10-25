@@ -92,7 +92,7 @@ export async function readReservation(reservation_id, signal) {
  */
 
 export async function createReservation(newReservation, signal) {
-  const url = new URL(`${API_BASE_URL}/reservations/new`);
+  const url = new URL(`${API_BASE_URL}/reservations`);
   const options = {
     method: "POST",
     headers,
@@ -122,7 +122,7 @@ export async function createTable(newTable, signal) {
  * Assigns a reservation to a table  (seats the reservation)
  * */
 
-export async function seatTable(table_id, reservation_id, signal) {
+export async function seatTable(reservation_id, table_id, signal) {
   const url = new URL(`${API_BASE_URL}/tables/${table_id}/seat`);
   const options = {
     method: "PUT",

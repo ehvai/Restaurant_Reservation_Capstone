@@ -44,17 +44,18 @@ function Seat() {
     event.preventDefault();
     const abortController = new AbortController();
     try {
-      await seatTable(tableId, reservation_id, abortController.signal);
+      await seatTable(reservation_id, tableId, abortController.signal);
       history.push(`/dashboard`);
     } catch (error) {
       setTablesError(error);
+      setReservationError(error);
       return () => abortController.abort();
     }
   };
 
   const handleCancel = (event) => {
     event.preventDefault();
-    history.push("/dashboard");
+    history.goBack();
   };
 
   return (

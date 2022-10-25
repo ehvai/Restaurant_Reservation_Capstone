@@ -107,12 +107,12 @@
        message: "restaurant is not open until 10:30AM",
      });
    }
-   if(reservation_time < curTime){
-     return next({
-       status: 400,
-       message: 'cannot schedule a reservation before now'
-     })
-   }
+ //  if(reservation_time < curTime){
+  //   return next({
+  //     status: 400,
+  //     message: 'cannot schedule a reservation before now'
+ //    })
+ //  }
    if (reservation_time > "21:30"){
      return next({
        status: 400,
