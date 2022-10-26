@@ -1,13 +1,15 @@
 import React from "react";
+import { useHistory } from "react-router-dom"
 
 function ReservationForm({
   formName,
   handleSubmit,
   handleChange,
-  handleCancel,
   reservation,
-  reservationId = "",
 }) {
+
+  const history=useHistory()
+
   return (
     <div>
       <form onSubmit={handleSubmit}>
@@ -60,6 +62,9 @@ function ReservationForm({
                 id="mobile_number"
                 onChange={handleChange}
                 value={reservation.mobile_number}
+                type="tel"
+                pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
+                maxLength="12"
                 placeholder={
                   (formName = "New Reservation"
                     ? "Mobile Number"
@@ -141,7 +146,7 @@ function ReservationForm({
               <button
                 type="button"
                 className="btn btn-secondary button"
-                onClick={handleCancel}
+                onClick={history.goBack}
               >
                 <span className="oi oi-x"></span>
                 &nbsp;Cancel
