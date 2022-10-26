@@ -76,6 +76,18 @@ function tableSeated(req, res, next) {
   next();
 }
 
+function tableEmpty(req, res, next){
+  const { reservation_id } = res.locals.tables;
+
+  if(reservation_id = null) {
+    return next({
+      status: 400,
+      message: "table is not occupied"
+    })
+  }
+  next();
+}
+
 // functions to list, create, and update
 async function list(req, res) {
   const tables = await service.list();
@@ -94,6 +106,13 @@ async function update(req, res) {
   res.status(200).json({ data });
 }
 
+async function destroy(req, res) {
+  const { table_id } = req.params;
+  const { reservation_id } = req.body.data;
+  const data = await service.finished(reservation_id, table_id);
+  res.status(200)
+}
+
 module.exports = {
   list: [asyncErrorBoundary(list)],
   create: [
@@ -108,6 +127,9 @@ module.exports = {
     asyncErrorBoundary(tableIdExists),
     tableSeated,
     asyncErrorBoundary(update),
+  ],
+  delete: [
+    asyncErrorBoundary(destroy)
   ],
   REQUIRED_PROPERTIES,
 };

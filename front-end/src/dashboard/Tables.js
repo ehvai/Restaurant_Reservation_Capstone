@@ -1,4 +1,19 @@
+import React from "react";
+import { finishTable, listTables} from "../utils/api"
+
 function Tables({ tables }) {
+
+  const handleFinish = async (event) =>{
+    event.preventDefault();
+    if(window.confirm("Is this table ready to seat new guests? This cannot be undone.") === true){
+    const tableId = event.target.value
+    const abortController = new AbortController();
+    await finishTable(tableId, abortController.signal);
+    await listTables(abortController.signal)
+    return () => abortController.abort();}
+  }
+
+
   // mapping through the table list of the selected day
   const tableList = tables.map((table) => {
     return (
@@ -8,6 +23,7 @@ function Tables({ tables }) {
         <td data-table-id-status={table.table_id}>
           {table.reservation_id ? "Occupied" : "Free"}
         </td>
+        {table.reservation_id ? <td type="button" className="btn btn-outline-secondary" data-table-id-finish={table.table_id} onClick={handleFinish}>Finish</td> : ''}
       </tr>
     );
   });
