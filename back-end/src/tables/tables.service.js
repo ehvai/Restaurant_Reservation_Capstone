@@ -29,7 +29,7 @@ function read(table_id) {
 }
 
 function finished(table_id) {
-  return knex("tables").where({ table_id }).update({reservation_id: null}).returning("*")
+  return knex("tables").where({ table_id }).update({reservation_id: null})
 }
 
 module.exports = {
@@ -38,4 +38,5 @@ module.exports = {
   update,
   seated,
   read,
+  finished
 };

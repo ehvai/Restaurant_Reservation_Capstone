@@ -10,7 +10,7 @@ async function reservationIdExists(req, res, next) {
   }
   return next({
     status: 404,
-    message: "999",
+    message: `${req.body.data.reservation_id} not found`,
   });
 }
 
