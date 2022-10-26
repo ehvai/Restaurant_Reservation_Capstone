@@ -1,19 +1,16 @@
 import React from "react";
 
-
-function ReservationForm(formName, handleSubmit, handleChange, handleCancel, reservation) {
-
+function ReservationForm({
+  formName,
+  handleSubmit,
+  handleChange,
+  handleCancel,
+  reservation,
+  reservationId = "",
+}) {
   return (
     <div>
       <form onSubmit={handleSubmit}>
-        {error && (
-          <div className="alert alert-danger">
-            <p>Please fix the following errors:</p>
-            <ul>
-              <li>{error}</li>
-            </ul>
-          </div>
-        )}
         <div className="row createRes">
           <div className="form-group col">
             <div>
