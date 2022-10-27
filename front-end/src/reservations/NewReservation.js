@@ -44,10 +44,10 @@ function NewReservation() {
     newReservation.people = Number(newReservation.people)
 
     if (Date.now() > Date.parse(reservationDate)) {
-      errors.push({ message: `Reservation must be for a future date or time` });
+      errors.push({ message: `The reservation cannot be in the past` });
     }
     if (reservationDate.getDay() === 2) {
-      errors.push({ message: `We are closed on Tuesdays` });
+      errors.push({ message: `The restaurant is closed on Tuesdays` });
     }
     if ((hours <= 10 && minutes < 30) || hours <= 9) {
       errors.push({ message: `We open at 10:30am` });
@@ -61,8 +61,6 @@ function NewReservation() {
 
     setReservationErrors(errors);
 
-    console.log(errors)
-    console.log(reservationErrors)
     !errors.length &&
       createReservation(newReservation, abortController.signal)
         .then((_) =>
@@ -71,7 +69,6 @@ function NewReservation() {
         .catch((error) => console.log(error));
     return () => abortController.abort();
   };
-
 
   let displayErrors = reservationErrors.map((error) => (
     <ErrorAlert key={error.message} error={error} />

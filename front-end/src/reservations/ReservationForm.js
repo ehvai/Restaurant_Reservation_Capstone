@@ -63,8 +63,6 @@ function ReservationForm({
                 onChange={handleChange}
                 value={reservation.mobile_number}
                 type="tel"
-                pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
-                maxLength="12"
                 placeholder={
                   (formName = "New Reservation"
                     ? "Mobile Number"
