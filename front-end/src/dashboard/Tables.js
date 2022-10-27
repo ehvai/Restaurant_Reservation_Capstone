@@ -3,12 +3,14 @@ import { finishTable } from "../utils/api";
 
 function Tables({ table, loadDashboard }) {
   function handleFinish() {
-    if (window.confirm("Is this table ready to seat new guests? This cannot be undone.")) {
-      const abortController = new AbortController();
-      finishTable(table.table_id, abortController.signal)
+    if (
+      window.confirm(
+        "Is this table ready to seat new guests? This cannot be undone."
+      )
+    ) {
+      finishTable(table.table_id)
         .then(loadDashboard)
         .catch((error) => console.log("error", error));
-      return () => abortController.abort();
     }
   }
 
