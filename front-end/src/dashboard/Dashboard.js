@@ -61,53 +61,62 @@ function Dashboard({ date }) {
     history.push(`/dashboard?date=${today}`);
   };
 
+  const tableList = tables.map((table) => (
+    <Tables loadDashboard={loadDashboard} key={table.table_id} table={table} />
+  ));
+
   return (
     <main>
-        <div className="container row dashTitle">
-          <h1 className="row dashHeading">Dashboard</h1>
+      <div className="container row dashTitle">
+        <h1 className="row dashHeading">Dashboard</h1>
+      </div>
+      <h4 className="row dashHeading">Reservations for {date}</h4>
+      <div className="row">
+        <div className="btn-group col" role="group" aria-label="Basic example">
+          <button
+            type="button"
+            className="btn btn-secondary"
+            onClick={handlePrevious}
+          >
+            <span className="oi oi-chevron-left"></span>
+            &nbsp;Previous
+          </button>
+          <button
+            type="button"
+            className="btn btn-secondary"
+            onClick={handleToday}
+          >
+            Today
+          </button>
+          <button
+            type="button"
+            className="btn btn-secondary"
+            onClick={handleNext}
+          >
+            Next&nbsp;
+            <span className="oi oi-chevron-right"></span>
+          </button>
         </div>
-          <h4 className="row dashHeading">Reservations for {date}</h4>
-          <div className="row">
-            <div
-              className="btn-group col"
-              role="group"
-              aria-label="Basic example"
-            >
-              <button
-                type="button"
-                className="btn btn-secondary"
-                onClick={handlePrevious}
-              >
-                <span className="oi oi-chevron-left"></span>
-                &nbsp;Previous
-              </button>
-              <button
-                type="button"
-                className="btn btn-secondary"
-                onClick={handleToday}
-              >
-                Today
-              </button>
-              <button
-                type="button"
-                className="btn btn-secondary"
-                onClick={handleNext}
-              >
-                Next&nbsp;
-                <span className="oi oi-chevron-right"></span>
-              </button>
-            </div>
-          </div>
-        <div className="d-md-flex">
-          <div className="container">
-            <ErrorAlert error={reservationsError} />
-            <Reservations reservations={reservations} />
-          </div>
-          <div className="container">
-            <ErrorAlert error={tablesError} />
-            <Tables tables={tables} />
-          </div>
+      </div>
+      <div className="d-md-flex">
+        <div className="container">
+          <ErrorAlert error={reservationsError} />
+          <Reservations reservations={reservations} />
         </div>
+        <div className="container">
+          <ErrorAlert error={tablesError} />
+          <table className="table">
+            <thead>
+              <tr>
+                <th scope="col">TABLE NAME</th>
+                <th scope="col">CAPACITY</th>
+                <th scope="col">STATUS</th>
+              </tr>
+            </thead>
+            <tbody>{tableList}</tbody>
+          </table>
+        </div>
+      </div>
     </main>
   );
 }

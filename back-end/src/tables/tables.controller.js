@@ -39,7 +39,7 @@ function hasValidValues(req, res, next) {
     });
   }
 
-  if (typeof capacity !== 'number') {
+  if (typeof capacity !== "number") {
     return next({
       status: 400,
       message: "capacity must be a number",
@@ -72,7 +72,18 @@ function tableSeated(req, res, next) {
       message: "reservation is greater than table capacity",
     });
   }
+  next();
+}
 
+function tableEmpty(req, res, next) {
+  const occupied = res.locals.tables.reservation_id;
+
+  if (!occupied) {
+    return next({
+      status: 400,
+      message: "table is not occupied",
+    });
+  }
   next();
 }
 
@@ -87,11 +98,17 @@ async function create(req, res) {
   res.status(201).json({ data: table });
 }
 
-async function update(req, res) {
+async function seat(req, res) {
   const { table_id } = req.params;
   const { reservation_id } = req.body.data;
   const data = await service.seated(reservation_id, table_id);
   res.status(200).json({ data });
+}
+
+async function finish(req, res) {
+  const { table_id } = req.params;
+ const data =  await service.finished(table_id);
+  res.status(200).json({ data});
 }
 
 module.exports = {
@@ -102,12 +119,17 @@ module.exports = {
     hasValidValues,
     asyncErrorBoundary(create),
   ],
-  update: [
+  seat: [
     hasRequiredUpdateProperties,
     asyncErrorBoundary(reservationIdExists),
     asyncErrorBoundary(tableIdExists),
     tableSeated,
-    asyncErrorBoundary(update),
+    asyncErrorBoundary(seat),
+  ],
+  finish: [
+    asyncErrorBoundary(tableIdExists),
+    tableEmpty,
+    asyncErrorBoundary(finish),
   ],
   REQUIRED_PROPERTIES,
 };

@@ -1,13 +1,14 @@
 import React from "react";
-
+import { useHistory } from "react-router-dom"
 function TableForm({
   formName,
   handleChange,
   handleSubmit,
-  handleCancel,
   tables,
   tableId = "",
 }) {
+  const history = useHistory();
+  
   return (
     <form onSubmit={handleSubmit}>
       <div className="form-group col">
@@ -55,7 +56,7 @@ function TableForm({
             <button
               type="button"
               className="btn btn-secondary button"
-              onClick={handleCancel}
+              onClick={history.goBack}
             >
               <span className="oi oi-x"></span>
               &nbsp;Cancel

@@ -28,10 +28,15 @@ function read(table_id) {
   return knex("tables").select("*").where({ table_id }).first();
 }
 
+function finished(table_id) {
+  return knex("tables").where({ table_id }).update({reservation_id: null})
+}
+
 module.exports = {
   list,
   create,
   update,
   seated,
   read,
+  finished
 };

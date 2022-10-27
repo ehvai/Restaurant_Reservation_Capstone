@@ -3,6 +3,7 @@ import { createTable } from "../utils/api";
 import { useHistory } from "react-router-dom";
 import TableForm from "./TableForm";
 import "../App.css";
+import ErrorAlert from "../layout/ErrorAlert";
 
 const initialTable = {
   table_name: "",
@@ -13,6 +14,7 @@ function NewTable() {
   const [newTable, setNewTable] = useState({
     ...initialTable,
   });
+  const [tableErrors, setTableErrors] = useState([]);
   const history = useHistory();
 
   const handleChange = (event) => {
@@ -22,31 +24,43 @@ function NewTable() {
     });
   };
 
-  const handleSubmit = async (event) => {
+  const handleSubmit = (event) => {
     event.preventDefault();
     const formatTable = {
       ...newTable,
       capacity: Number(newTable.capacity),
     };
+    setTableErrors([]);
+    const errors = [];
+    if (newTable.table_name.length < 2) {
+      errors.push({ message: `Table name must be at least 2 characters` });
+    }
+    if (newTable.capacity < 1) {
+      errors.push({ message: `Capacity must be at least 1` });
+    }
+
+    setTableErrors(errors);
     const abortController = new AbortController();
-    await createTable(formatTable, abortController.signal);
-    history.push(`/dashboard`);
+
+    !errors.length &&
+      createTable(formatTable, abortController.signal)
+        .then((_) =>history.push(`/dashboard`))
+        .catch((error) => console.log(error));
     return () => abortController.abort();
   };
 
-  const handleCancel = (event) => {
-    event.preventDefault();
-    history.goBack();
-  };
+  let showErrors = tableErrors.map((error) => (
+    <ErrorAlert key={error.message} error={error} />
+  ));
 
   return (
     <div>
       <h1>New Table</h1>
+      {showErrors}
       <TableForm
         formName="New Table"
         handleSubmit={handleSubmit}
         handleChange={handleChange}
-        handleCancel={handleCancel}
         tables={newTable}
       />
     </div>
