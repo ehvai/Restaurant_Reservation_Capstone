@@ -6,19 +6,50 @@ const service = require("./reservations.service");
 const asyncErrorBoundary = require("../errors/asyncErrorBoundary");
 const hasProperties = require("../validations/hasProperties");
 
+
+// Validating properties 
 const REQUIRED_PROPERTIES = [
   "first_name",
   "last_name",
   "mobile_number",
   "reservation_date",
   "reservation_time",
+  "people"
+];
+
+const VALID_PROPERTIES = [
+  "first_name",
+  "last_name",
+  "mobile_number",
+  "reservation_date",
+  "reservation_time",
   "people",
+  "status",
+  "reservation_id",
+  "created_at",
+  "updated_at",
 ];
 
 const validateRequiredProperties = hasProperties(REQUIRED_PROPERTIES)
 
+function hasOnlyValidProperties(req, res, next) {
+  const { data = {} } = req.body;
+  const invalidStatuses = Object.keys(data).filter(
+    (field) => !VALID_PROPERTIES.includes(field)
+  );
+  if (invalidStatuses.length) {
+    return next({
+      status: 400,
+      message: `Invalid field(s): ${invalidStatuses.join(", ")}`,
+    });
+  }
+  next();
+}
+
+
+
 async function validateProperties(req, res, next){
-  const { data: {reservation_date, reservation_time, people} } = req.body;
+  const { data: {reservation_date, reservation_time, people, status} } = req.body;
   try {
     if(!checkDate(reservation_date)){
       const error=new Error(`reservation_date format is not valid, use YYYY-MM-DD`)
@@ -45,6 +76,7 @@ async function validateProperties(req, res, next){
     next(error);
   }
 }
+
 
 function validateReservationDate(req, res, next){
   const { data: {reservation_date, reservation_time} } = req.body
@@ -84,7 +116,6 @@ function validateReservationTime(req, res, next){
   } catch (error) {
     next(error);
   }
-
 }
 
 function checkDate(date){
@@ -111,7 +142,40 @@ async function reservationIdExists(req, res, next) {
   });
 }
 
+function statusNotFinished(req, res, next) {
+  const { status } = res.locals.reservation;
+  if (status === "finished") {
+    return next({
+      status: 400,
+      message: "A finished reservation cannot be updated",
+    });
+  }
+  next();
+}
 
+function validStatus(req, res, next) {
+  const { status } = req.body.data;
+  const VALID_STATUSES = ["booked", "seated", "finished", "cancelled"];
+  if (VALID_STATUSES.includes(status)) {
+    return next();
+  }
+  next({
+    status: 400,
+    message: "Status is unknown",
+  });
+}
+
+function statusIsBooked(req, res, next) {
+  const { data = {} } = req.body;
+  const status = data.status;
+  if (status && status !== "booked") {
+    return next({
+      status: 400,
+      message: `Invalid status: ${status}`,
+    });
+  }
+  next();
+}
 // functional elements
 
 async function list(req, res) {
@@ -128,14 +192,28 @@ async function read(req, res) {
   res.json({ data: res.locals.reservation });
 }
 
+async function setStatus(req, res){
+  const { reservation_id } = req.params;
+  const status = req.body.data.status
+  const data =  await service.setStatus(reservation_id, status);
+   res.status(200).json({ data});
+}
+
 module.exports = {
   list: [asyncErrorBoundary(list)],
   create: [
     validateRequiredProperties,
+    hasOnlyValidProperties,
     asyncErrorBoundary(validateProperties),
     validateReservationDate,
     validateReservationTime,
+    statusIsBooked,
     asyncErrorBoundary(create),
   ],
   read: [asyncErrorBoundary(reservationIdExists), read],
+  setStatus: [
+    asyncErrorBoundary(reservationIdExists),
+    statusNotFinished,
+    validStatus,
+    asyncErrorBoundary(setStatus)]
 };

@@ -3,6 +3,7 @@
  */
 
 const service = require("./tables.service");
+const reservationService = require("../reservations/reservations.service")
 const asyncErrorBoundary = require("../errors/asyncErrorBoundary");
 const hasProperties = require("../validations/hasProperties");
 const tableIdExists = require("../validations/tableIdExists");
@@ -18,7 +19,7 @@ const hasRequiredUpdateProperties = hasProperties(REQUIRED_PARAMETERS);
 function hasOnlyValidProperties(req, res, next) {
   const { data = {} } = req.body;
   const invalidStatuses = Object.keys(data).filter(
-    (field) => !REQUIRED_PROPERTIES.includes(field)
+    (field) => ![...REQUIRED_PROPERTIES, "reservation_id"].includes(field)
   );
   if (invalidStatuses.length) {
     return next({
@@ -55,7 +56,7 @@ function hasValidValues(req, res, next) {
   next();
 }
 
-function tableSeated(req, res, next) {
+function validateTableIsUnoccupied(req, res, next) {
   const { people } = res.locals.reservation;
   const { reservation_id, capacity } = res.locals.tables;
 
@@ -75,7 +76,7 @@ function tableSeated(req, res, next) {
   next();
 }
 
-function tableEmpty(req, res, next) {
+function validateTableIsOccupied(req, res, next) {
   const occupied = res.locals.tables.reservation_id;
 
   if (!occupied) {
@@ -83,6 +84,18 @@ function tableEmpty(req, res, next) {
       status: 400,
       message: "table is not occupied",
     });
+  }
+  next();
+}
+
+async function resIsSeated(req, res, next){
+  const reservation = await reservationService.read(req.body.data.reservation_id)
+
+  if(reservation.status === "seated"){
+    return next({
+      status: 400,
+      message: "reservation is already seated"
+    })
   }
   next();
 }
@@ -107,7 +120,8 @@ async function seat(req, res) {
 
 async function finish(req, res) {
   const { table_id } = req.params;
- const data =  await service.finished(table_id);
+  const { reservation_id } = res.locals.tables;
+ const data =  await service.finished(table_id, reservation_id);
   res.status(200).json({ data});
 }
 
@@ -123,13 +137,13 @@ module.exports = {
     hasRequiredUpdateProperties,
     asyncErrorBoundary(reservationIdExists),
     asyncErrorBoundary(tableIdExists),
-    tableSeated,
+    asyncErrorBoundary(resIsSeated),
+    validateTableIsUnoccupied,
     asyncErrorBoundary(seat),
   ],
   finish: [
     asyncErrorBoundary(tableIdExists),
-    tableEmpty,
+    validateTableIsOccupied,
     asyncErrorBoundary(finish),
   ],
-  REQUIRED_PROPERTIES,
 };

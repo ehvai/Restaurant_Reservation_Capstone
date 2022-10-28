@@ -53,11 +53,6 @@ function Seat() {
     }
   };
 
-  const handleCancel = (event) => {
-    event.preventDefault();
-    history.goBack();
-  };
-
   return (
     <div>
       <h1>Seat Reservation</h1>
@@ -111,7 +106,7 @@ function Seat() {
               <button
                 type="button"
                 className="btn btn-secondary button"
-                onClick={handleCancel}
+                onClick={history.goBack}
               >
                 <span className="oi oi-x"></span>
                 &nbsp;Cancel

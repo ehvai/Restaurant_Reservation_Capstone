@@ -12,6 +12,7 @@ const initialReservation = {
   reservation_date: "",
   reservation_time: "",
   people: 1,
+  status: "booked",
 };
 
 function NewReservation() {
@@ -19,6 +20,7 @@ function NewReservation() {
     ...initialReservation,
   });
   const history = useHistory();
+  console.log("resStart: ", newReservation)
 
   const [reservationErrors, setReservationErrors] = useState([]);
 
@@ -70,6 +72,7 @@ function NewReservation() {
     return () => abortController.abort();
   };
 
+  console.log("resEnd: ", newReservation)
   let displayErrors = reservationErrors.map((error) => (
     <ErrorAlert key={error.message} error={error} />
   ));
