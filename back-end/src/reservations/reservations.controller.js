@@ -179,7 +179,8 @@ function statusIsBooked(req, res, next) {
 // functional elements
 
 async function list(req, res) {
-  const reservation = await service.list(req.query.date);
+  const { date, mobile_number } = req.query
+  const reservation = await (mobile_number ? service.search(mobile_number) : service.list(date));
   res.json({ data: reservation });
 }
 
@@ -190,6 +191,11 @@ async function create(req, res) {
 
 async function read(req, res) {
   res.json({ data: res.locals.reservation });
+}
+
+async function update(req, res) {
+  const data = await service.update(req.params.reservation_id, req.body.data)
+  res.json({ data });
 }
 
 async function setStatus(req, res){
@@ -215,5 +221,11 @@ module.exports = {
     asyncErrorBoundary(reservationIdExists),
     statusNotFinished,
     validStatus,
-    asyncErrorBoundary(setStatus)]
+    asyncErrorBoundary(setStatus)],
+  update: [
+    asyncErrorBoundary(reservationIdExists),
+    validateRequiredProperties,
+    asyncErrorBoundary(validateProperties),
+    asyncErrorBoundary(update)
+  ]
 };
