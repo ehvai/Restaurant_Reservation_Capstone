@@ -40,33 +40,35 @@ function Reservations({ reservations, loadDashboard }) {
       <td>{people}</td>
       <td data-reservation-id-status={reservation_id}>{status}</td>
       <td>
-        {status === "booked" ? (
+        {status === "booked" && (
           <a
             href={`/reservations/${reservation_id}/seat`}
             className="btn btn-seat"
           >
             Seat
           </a>
-        ) : (
-          ""
         )}
       </td>
       <td>
-        <a
-          href={`/reservations/${reservation_id}/edit`}
-          className="btn btn-edit"
-        >
-          Edit
-        </a>
+        {status === "booked" && (
+          <a
+            href={`/reservations/${reservation_id}/edit`}
+            className="btn btn-edit"
+          >
+            Edit
+          </a>
+        )}
       </td>
       <td>
-        <button
-          data-reservation-id-cancel={reservation_id}
-          className="btn btn-cancel"
-          onClick={handleCancel}
-        >
-          Cancel
-        </button>
+        {status === "booked" && (
+          <button
+            data-reservation-id-cancel={reservation_id}
+            className="btn btn-cancel"
+            onClick={handleCancel}
+          >
+            Cancel
+          </button>
+        )}
       </td>
     </tr>
   );

@@ -20,7 +20,6 @@ function NewReservation() {
     ...initialReservation,
   });
   const history = useHistory();
-  console.log("resStart: ", newReservation)
 
   const [reservationErrors, setReservationErrors] = useState([]);
 

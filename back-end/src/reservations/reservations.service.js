@@ -38,6 +38,13 @@ function search(mobile_number) {
       .orderBy("reservation_date");
   }
 
+function update(editReservation){
+    return knex("reservations")
+    .select("*")
+    .where({reservation_id: editReservation.reservation_id})
+    .update(editReservation, "*")
+    .then(updatedReservation => updatedReservation[0])
+}
 
 module.exports = {
     list,
@@ -45,4 +52,5 @@ module.exports = {
     read,
     setStatus,
     search,
+    update
 }

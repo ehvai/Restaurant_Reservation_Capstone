@@ -194,7 +194,7 @@ async function read(req, res) {
 }
 
 async function update(req, res) {
-  const data = await service.update(req.params.reservation_id, req.body.data)
+  const data = await service.update(req.body.data)
   res.json({ data });
 }
 
@@ -223,9 +223,11 @@ module.exports = {
     validStatus,
     asyncErrorBoundary(setStatus)],
   update: [
-    asyncErrorBoundary(reservationIdExists),
-    validateRequiredProperties,
-    asyncErrorBoundary(validateProperties),
+   asyncErrorBoundary(reservationIdExists),
+   hasOnlyValidProperties,
+   validateRequiredProperties,
+   validateProperties,
+   validStatus,
     asyncErrorBoundary(update)
   ]
 };
