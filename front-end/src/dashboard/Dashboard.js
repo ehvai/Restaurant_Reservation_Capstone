@@ -41,6 +41,7 @@ function Dashboard({ date }) {
     listTables(abortController.signal).then(setTables).catch(setTablesError);
     return () => abortController.abort();
   }
+  console.log(reservations)
 
   // Previous, Today and Next button functionality
   const handlePrevious = (event) => {
