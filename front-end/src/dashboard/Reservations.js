@@ -1,58 +1,74 @@
 import "../App.css";
+import { setStatus } from "../utils/api";
 
-function Reservations({ reservations }) {
+function Reservations({ reservations, loadDashboard }) {
+  const {
+    reservation_id,
+    first_name,
+    last_name,
+    mobile_number,
+    reservation_date,
+    reservation_time,
+    people,
+    status,
+  } = reservations;
+
+  const handleCancel = () => {
+    if (
+      window.confirm(
+        "Do you want the cancel this reservation? This cannot be undone."
+      )
+    ) {
+      const abortController = new AbortController();
+      setStatus(reservation_id, { status: "cancelled" }, abortController.signal)
+        .then(loadDashboard)
+        .catch((error) => console.log(error));
+      return () => abortController.abort();
+    }
+  };
+
   // mapping through the reservation list to create the table of selected day reservations based on loadDashboard results
-  const reservationList = reservations.map((reservation) => {
-    return (
-      <tr key={reservation.reservation_id}>
-        <td>{reservation.reservation_id}</td>
-        <td>
-          {reservation.last_name}, {reservation.first_name}
-        </td>
-        <td>{reservation.mobile_number}</td>
-        <td>{reservation.reservation_date}</td>
-        <td>{reservation.reservation_time}</td>
-        <td>{reservation.people}</td>
-        <td data-reservation-id-status={reservation.reservation_id}>
-          {reservation.status}
-        </td>
-        <td>
-          {reservation.status === "booked" ? (
-            <a
-              href={`/reservations/${reservation.reservation_id}/seat`}
-              className="btn btn-outline-secondary"
-            >
-              Seat
-            </a>
-          ) : (
-            ""
-          )}
-        </td>
-      </tr>
-    );
-  });
-
   return (
-    <div className="row">
-      <div>
-        <div>
-          <table className="table">
-            <thead>
-              <tr>
-                <th scope="col">#</th>
-                <th scope="col">NAME</th>
-                <th scope="col">PHONE</th>
-                <th scope="col">DATE</th>
-                <th scope="col">TIME</th>
-                <th scope="col">PEOPLE</th>
-                <th scope="cold">STATUS</th>
-              </tr>
-            </thead>
-            <tbody>{reservationList}</tbody>
-          </table>
-        </div>
-      </div>
-    </div>
+    <tr key={reservation_id}>
+      <td>{reservation_id}</td>
+      <td>
+        {last_name}, {first_name}
+      </td>
+      <td>{mobile_number}</td>
+      <td>{reservation_date}</td>
+      <td>{reservation_time}</td>
+      <td>{people}</td>
+      <td data-reservation-id-status={reservation_id}>{status}</td>
+      <td>
+        {status === "booked" ? (
+          <a
+            href={`/reservations/${reservation_id}/seat`}
+            className="btn btn-seat"
+          >
+            Seat
+          </a>
+        ) : (
+          ""
+        )}
+      </td>
+      <td>
+        <a
+          href={`/reservations/${reservation_id}/edit`}
+          className="btn btn-edit"
+        >
+          Edit
+        </a>
+      </td>
+      <td>
+        <button
+          data-reservation-id-cancel={reservation_id}
+          className="btn btn-cancel"
+          onClick={handleCancel}
+        >
+          Cancel
+        </button>
+      </td>
+    </tr>
   );
 }
 

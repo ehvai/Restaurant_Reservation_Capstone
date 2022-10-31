@@ -41,7 +41,6 @@ function Dashboard({ date }) {
     listTables(abortController.signal).then(setTables).catch(setTablesError);
     return () => abortController.abort();
   }
-  console.log(reservations)
 
   // Previous, Today and Next button functionality
   const handlePrevious = (event) => {
@@ -64,6 +63,10 @@ function Dashboard({ date }) {
 
   const tableList = tables.map((table) => (
     <Tables loadDashboard={loadDashboard} key={table.table_id} table={table} />
+  ));
+
+  const reservationList = reservations.map((reservation) => (
+    <Reservations reservations={reservation} key={reservation.reservation_id} loadDashboard={loadDashboard}/>
   ));
 
   return (
@@ -102,7 +105,26 @@ function Dashboard({ date }) {
       <div className="d-md-flex">
         <div className="container">
           <ErrorAlert error={reservationsError} />
-          <Reservations reservations={reservations} />
+          <div className="row">
+            <div>
+              <div>
+                <table className="table">
+                  <thead>
+                    <tr>
+                      <th scope="col">#</th>
+                      <th scope="col">NAME</th>
+                      <th scope="col">PHONE</th>
+                      <th scope="col">DATE</th>
+                      <th scope="col">TIME</th>
+                      <th scope="col">PEOPLE</th>
+                      <th scope="cold">STATUS</th>
+                    </tr>
+                  </thead>
+                  <tbody>{reservationList}</tbody>
+                </table>
+              </div>
+            </div>
+          </div>
         </div>
         <div className="container">
           <ErrorAlert error={tablesError} />

@@ -72,7 +72,6 @@ function NewReservation() {
     return () => abortController.abort();
   };
 
-  console.log("resEnd: ", newReservation)
   let displayErrors = reservationErrors.map((error) => (
     <ErrorAlert key={error.message} error={error} />
   ));
