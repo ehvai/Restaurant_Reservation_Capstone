@@ -66,37 +66,37 @@ function Dashboard({ date }) {
   ));
 
   const reservationList = reservations.map((reservation) => (
-    <Reservations reservations={reservation} key={reservation.reservation_id} loadDashboard={loadDashboard}/>
+    <Reservations
+      reservations={reservation}
+      key={reservation.reservation_id}
+      loadDashboard={loadDashboard}
+    />
   ));
 
   return (
     <main>
-      <div className="container row dashTitle">
-        <h1 className="row dashHeading">Dashboard</h1>
-      </div>
-      <h4 className="row dashHeading">Reservations for {date}</h4>
+      <fieldset>
+        <div className="container">
+          <h1 className="row dashHeading">Dashboard</h1>
+        </div>
+        <div>
+          <h4 className="row dashHeading">Reservations for {date}</h4>
+        </div>
+      </fieldset>
       <div className="row">
         <div className="btn-group col" role="group" aria-label="Basic example">
           <button
             type="button"
-            className="btn btn-secondary"
+            className="btn btn-info"
             onClick={handlePrevious}
           >
             <span className="oi oi-chevron-left"></span>
             &nbsp;Previous
           </button>
-          <button
-            type="button"
-            className="btn btn-secondary"
-            onClick={handleToday}
-          >
+          <button type="button" className="btn btn-info" onClick={handleToday}>
             Today
           </button>
-          <button
-            type="button"
-            className="btn btn-secondary"
-            onClick={handleNext}
-          >
+          <button type="button" className="btn btn-info" onClick={handleNext}>
             Next&nbsp;
             <span className="oi oi-chevron-right"></span>
           </button>
@@ -108,36 +108,40 @@ function Dashboard({ date }) {
           <div className="row">
             <div>
               <div>
-                <table className="table">
-                  <thead>
-                    <tr>
-                      <th scope="col">#</th>
-                      <th scope="col">NAME</th>
-                      <th scope="col">PHONE</th>
-                      <th scope="col">DATE</th>
-                      <th scope="col">TIME</th>
-                      <th scope="col">PEOPLE</th>
-                      <th scope="cold">STATUS</th>
-                    </tr>
-                  </thead>
-                  <tbody>{reservationList}</tbody>
-                </table>
+                <fieldset className="reservations">
+                  <table className="table">
+                    <thead>
+                      <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">NAME</th>
+                        <th scope="col">PHONE</th>
+                        <th scope="col">DATE</th>
+                        <th scope="col">TIME</th>
+                        <th scope="col">PEOPLE</th>
+                        <th scope="cold">STATUS</th>
+                      </tr>
+                    </thead>
+                    <tbody>{reservationList}</tbody>
+                  </table>
+                </fieldset>
               </div>
             </div>
           </div>
         </div>
         <div className="container">
           <ErrorAlert error={tablesError} />
-          <table className="table">
-            <thead>
-              <tr>
-                <th scope="col">TABLE NAME</th>
-                <th scope="col">CAPACITY</th>
-                <th scope="col">STATUS</th>
-              </tr>
-            </thead>
-            <tbody>{tableList}</tbody>
-          </table>
+          <fieldset className="tables">
+            <table className="table">
+              <thead>
+                <tr>
+                  <th scope="col">TABLE NAME</th>
+                  <th scope="col">CAPACITY</th>
+                  <th scope="col">STATUS</th>
+                </tr>
+              </thead>
+              <tbody>{tableList}</tbody>
+            </table>
+          </fieldset>
         </div>
       </div>
     </main>

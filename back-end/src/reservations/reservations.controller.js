@@ -109,7 +109,6 @@ function checkDate(date) {
 
 function checkTime(time) {
   let regTimeTest = /^(2[0-3]|[0-1][0-9]):[0-5][0-9]$/;
-  console.log(time)
   return regTimeTest.test(time);
 }
 

@@ -55,7 +55,9 @@ function NewTable() {
 
   return (
     <div>
-      <h1>New Table</h1>
+    <div className="container">
+        <h1 className="row dashHeading">New Table</h1>
+      </div>
       {showErrors}
       <TableForm
         formName="New Table"
