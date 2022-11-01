@@ -5,7 +5,7 @@ async function reservationIdExists(req, res, next) {
   const reservation = await service.read(resId);
 
   if (reservation) {
-    res.locals.reservation = reservation;
+    res.locals.reservation =  reservation;
     return next();
   }
   return next({

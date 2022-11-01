@@ -6,69 +6,72 @@ const service = require("./reservations.service");
 const asyncErrorBoundary = require("../errors/asyncErrorBoundary");
 const hasProperties = require("../validations/hasProperties");
 
-
-// Validating properties 
+// Validating properties
 const REQUIRED_PROPERTIES = [
   "first_name",
   "last_name",
   "mobile_number",
   "reservation_date",
   "reservation_time",
-  "people"
-];
-
-const VALID_PROPERTIES = [
-  "first_name",
-  "last_name",
-  "mobile_number",
-  "reservation_date",
-  "reservation_time",
   "people",
-  "status",
-  "reservation_id",
-  "created_at",
-  "updated_at",
 ];
 
-const validateRequiredProperties = hasProperties(REQUIRED_PROPERTIES)
+const hasRequiredProperties = hasProperties(REQUIRED_PROPERTIES);
 
-function hasOnlyValidProperties(req, res, next) {
-  const { data = {} } = req.body;
-  const invalidStatuses = Object.keys(data).filter(
-    (field) => !VALID_PROPERTIES.includes(field)
+async function validateProperties(req, res, next) {
+  const {
+    data: { reservation_date, reservation_time, people },
+  } = req.body;
+
+  const [hours, minutes] = reservation_time.split(":");
+  const newResTime=`${hours}:${minutes}`
+  try {
+    if (!checkDate(reservation_date)) {
+      const error = new Error(
+        `reservation_date format is not valid, use YYYY-MM-DD`
+      );
+      error.status = 400;
+      throw error;
+    }
+    if (!checkTime(newResTime)) {
+      const error = new Error(
+        `reservation_time format is not valid, use HH:MM:SS`
+      );
+      error.status = 400;
+      throw error;
+    }
+    if (typeof people !== "number") {
+      const error = new Error(`people must be a number`);
+      error.status = 400;
+      throw error;
+    }
+    if (people < 1) {
+      const error = new Error(`people must be at least 1`);
+      error.status = 400;
+      throw error;
+    }
+    next();
+  } catch (error) {
+    next(error);
+  }
+}
+
+function validateReservationDate(req, res, next) {
+  const {
+    data: { reservation_date, reservation_time },
+  } = req.body;
+  const reservationDate = new Date(
+    `${reservation_date}T${reservation_time}:00`
   );
-  if (invalidStatuses.length) {
-    return next({
-      status: 400,
-      message: `Invalid field(s): ${invalidStatuses.join(", ")}`,
-    });
-  }
-  next();
-}
-
-
-
-async function validateProperties(req, res, next){
-  const { data: {reservation_date, reservation_time, people, status} } = req.body;
   try {
-    if(!checkDate(reservation_date)){
-      const error=new Error(`reservation_date format is not valid, use YYYY-MM-DD`)
-      error.status=400;
+    if (Date.now() > Date.parse(reservationDate)) {
+      const error = new Error(`Reservation must be for a future date or time`);
+      error.status = 400;
       throw error;
     }
-    if(!checkTime(reservation_time)){
-      const error=new Error(`reservation_time format is not valid, use HH:MM:SS`)
-      error.status=400;
-      throw error;
-    }
-    if(typeof people !=='number'){
-      const error=new Error(`people must be a number`)
-      error.status=400;
-      throw error;
-    }
-    if(people < 1){
-      const error=new Error(`people must be at least 1`)
-      error.status=400;
+    if (reservationDate.getDay() == 2) {
+      const error = new Error(`We are closed on Tuesdays`);
+      error.status = 400;
       throw error;
     }
     next();
@@ -77,39 +80,20 @@ async function validateProperties(req, res, next){
   }
 }
 
-
-function validateReservationDate(req, res, next){
-  const { data: {reservation_date, reservation_time} } = req.body
-  const reservationDate = new Date(`${reservation_date}T${reservation_time}:00`)
+function validateReservationTime(req, res, next) {
+  const {
+    data: { reservation_time },
+  } = req.body;
+  const [hours, minutes] = reservation_time.split(":");
   try {
-    if(Date.now() > Date.parse(reservationDate)){
-      const error=new Error(`Reservation must be for a future date or time`)
-      error.status=400;
+    if ((hours <= 10 && minutes < 30) || hours <= 9) {
+      const error = new Error(`We open at 10:30am`);
+      error.status = 400;
       throw error;
     }
-    if(reservationDate.getDay() == 2){
-      const error=new Error(`We are closed on Tuesdays`)
-      error.status=400;
-      throw error;
-    }
-    next();
-  } catch (error) {
-    next(error);    
-  }
-}
-
-function validateReservationTime(req, res, next){
-  const { data: { reservation_time } } = req.body
-  const [hours, minutes] = reservation_time.split(":")
-  try {
-    if((hours <=10 && minutes < 30)|| hours <=9){
-      const error=new Error(`We open at 10:30am`)
-      error.status=400;
-      throw error;
-    }
-    if((hours >=21 && minutes > 30) || hours >=22){
-      const error=new Error(`We stop accepting reservations after 9:30pm`)
-      error.status=400;
+    if ((hours >= 21 && minutes > 30) || hours >= 22) {
+      const error = new Error(`We stop accepting reservations after 9:30pm`);
+      error.status = 400;
       throw error;
     }
     next();
@@ -118,18 +102,19 @@ function validateReservationTime(req, res, next){
   }
 }
 
-function checkDate(date){
+function checkDate(date) {
   let regDateTest = /^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/;
-  return regDateTest.test(date)
+  return regDateTest.test(date);
 }
 
-function checkTime(time){
-  let regTimeTest = /^(2[0-3]|[01][0-9]):[0-5][0-9]$/;
-  return regTimeTest.test(time)
+function checkTime(time) {
+  let regTimeTest = /^(2[0-3]|[0-1][0-9]):[0-5][0-9]$/;
+  console.log(time)
+  return regTimeTest.test(time);
 }
 
 async function reservationIdExists(req, res, next) {
-  const resId = req.params.reservation_id
+  const resId = req.params.reservation_id;
   const reservation = await service.read(resId);
 
   if (reservation) {
@@ -179,8 +164,10 @@ function statusIsBooked(req, res, next) {
 // functional elements
 
 async function list(req, res) {
-  const { date, mobile_number } = req.query
-  const reservation = await (mobile_number ? service.search(mobile_number) : service.list(date));
+  const { date, mobile_number } = req.query;
+  const reservation = await (mobile_number
+    ? service.search(mobile_number)
+    : service.list(date));
   res.json({ data: reservation });
 }
 
@@ -194,22 +181,21 @@ async function read(req, res) {
 }
 
 async function update(req, res) {
-  const data = await service.update(req.body.data)
+  const data = await service.update(req.body.data);
   res.json({ data });
 }
 
-async function setStatus(req, res){
+async function setStatus(req, res) {
   const { reservation_id } = req.params;
-  const status = req.body.data.status
-  const data =  await service.setStatus(reservation_id, status);
-   res.status(200).json({ data});
+  const status = req.body.data.status;
+  const data = await service.setStatus(reservation_id, status);
+  res.status(200).json({ data });
 }
 
 module.exports = {
   list: [asyncErrorBoundary(list)],
   create: [
-    validateRequiredProperties,
-    hasOnlyValidProperties,
+    hasRequiredProperties,
     asyncErrorBoundary(validateProperties),
     validateReservationDate,
     validateReservationTime,
@@ -221,13 +207,13 @@ module.exports = {
     asyncErrorBoundary(reservationIdExists),
     statusNotFinished,
     validStatus,
-    asyncErrorBoundary(setStatus)],
+    asyncErrorBoundary(setStatus),
+  ],
   update: [
-   asyncErrorBoundary(reservationIdExists),
-   hasOnlyValidProperties,
-   validateRequiredProperties,
-   validateProperties,
-   validStatus,
-    asyncErrorBoundary(update)
-  ]
+    hasRequiredProperties,
+    asyncErrorBoundary(reservationIdExists),
+    validateProperties,
+    validStatus,
+    asyncErrorBoundary(update),
+  ],
 };

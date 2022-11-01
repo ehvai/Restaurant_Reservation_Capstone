@@ -18,7 +18,7 @@ function EditReservation() {
   const history = useHistory();
   const { reservation_id } = useParams();
 
-  const [reservationErrors, setReservationErrors] = useState([]);
+  const [reservationErrors, setReservationErrors] = useState(null);
   const [editReservation, setEditReservation] = useState({
     ...initialReservation,
   });
@@ -47,25 +47,19 @@ function EditReservation() {
     event.preventDefault();
     const abortController = new AbortController();
     updateReservation(formattedReservation, reservation_id, abortController.signal)
-      .then((_) =>
+      .then(() =>
         history.push(`/dashboard?date=${formattedReservation.reservation_date}`)
       )
       .catch(setReservationErrors);
     return () => abortController.abort();
   };
 
-  let displayErrors =
-    reservationErrors.length &&
-    reservationErrors.map((error) => (
-      <ErrorAlert key={error.message} error={error} />
-    ));
-
-  console.log(editReservation);
+  const showErrors = reservationErrors && <ErrorAlert error={reservationErrors} />
 
   return (
     <div>
       <h1>Edit Reservation</h1>
-      {displayErrors}
+      {showErrors}
       <ReservationForm
         formName="Edit Reservation"
         handleSubmit={handleSubmit}

@@ -16,7 +16,7 @@ function Reservations({ reservations, loadDashboard }) {
   const handleCancel = () => {
     if (
       window.confirm(
-        "Do you want the cancel this reservation? This cannot be undone."
+        "Do you want to cancel this reservation? This cannot be undone."
       )
     ) {
       const abortController = new AbortController();
