@@ -3,6 +3,7 @@ import { useParams } from "react-router";
 import { useHistory } from "react-router-dom";
 import { readReservation, listTables, seatTable } from "../utils/api";
 import ErrorAlert from "../layout/ErrorAlert";
+import "../App.css";
 
 function Seat() {
   const [tables, setTables] = useState([]);
@@ -55,57 +56,66 @@ function Seat() {
 
   return (
     <div>
-      <h1>Seat Reservation</h1>
+      <div className="container">
+        <h1 className="row dashHeading">Seat Reservation</h1>
+      </div>
       <ErrorAlert error={reservationError} />
       <ErrorAlert error={tablesError} />
-      <div className="container">
-        <table className="table">
-          <tbody key={reservation.reservation_id}>
-            <tr>
-              <td>Reservation:</td>
-              <td>{reservation.reservation_id}</td>
-            </tr>
-            <tr>
-              <td>Name:</td>
-              <td>
-                {reservation.last_name}, {reservation.first_name}
-              </td>
-            </tr>
-            <tr>
-              <td>Date:</td>
-              <td>{reservation.reservation_date}</td>
-            </tr>
-            <tr>
-              <td>Time:</td>
-              <td>{reservation.reservation_time}</td>
-            </tr>
-            <tr>
-              <td>People:</td>
-              <td>{reservation.people}</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
       <form onSubmit={handleSubmit}>
         <div className="container">
-          <h3>Seat at table:</h3>
-          <h4>
-            <select required name="table_id" onChange={handleChange}>
-              <option>Select a table</option>
-              {availableTables}
-            </select>
-          </h4>
+          <fieldset className="reservations">
+            <table className="table seatTable">
+              <thead>
+                <tr>
+                  <th scope="col">#</th>
+                  <th scope="col">NAME</th>
+                  <th scope="col">PHONE</th>
+                  <th scope="col">DATE</th>
+                  <th scope="col">TIME</th>
+                  <th scope="col">PEOPLE</th>
+                </tr>
+              </thead>
+              <tbody key={reservation.reservation_id}>
+                <tr key={reservation.reservation_id}>
+                  <td className="rowBorder">{reservation.reservation_id}</td>
+                  <td className="rowBorder">
+                    {reservation.last_name}, {reservation.first_name}
+                  </td>
+                  <td className="rowBorder">{reservation.mobile_number}</td>
+                  <td className="rowBorder">{reservation.reservation_date}</td>
+                  <td className="rowBorder">{reservation.reservation_time}</td>
+                  <td className="rowBorder">{reservation.people}</td>
+                </tr>
+              </tbody>
+            </table>
+          </fieldset>
+        </div>
+
+        <div className="container row">
+          <div className="col">
+            <h3>Seat at table:</h3>
+          </div>
+          <div className="col">
+            <h4>
+              <select required name="table_id" onChange={handleChange}>
+                <option>Select a table</option>
+                {availableTables}
+              </select>
+            </h4>
+          </div>
         </div>
         <div>
           <div className="row">
-            <div className="col-5">
-              <button type="submit" className="btn btn-primary mr-2">
+            <div className="col-sm">
+              <button type="submit" className="btn btn-info btn-block mr-2">
                 <span className="oi oi-check"></span>
                 &nbsp;Submit
               </button>
+            </div>
+            <div className="col-sm">
               <button
                 type="button"
-                className="btn btn-secondary button"
+                className="btn btn-secondary btn-block mr-2"
                 onClick={history.goBack}
               >
                 <span className="oi oi-x"></span>

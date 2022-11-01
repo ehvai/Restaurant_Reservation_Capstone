@@ -1,5 +1,6 @@
 import React from "react";
 import { finishTable } from "../utils/api";
+import "../App.css";
 
 function Tables({ table, loadDashboard }) {
   function handleFinish() {
@@ -15,25 +16,32 @@ function Tables({ table, loadDashboard }) {
   }
 
   return (
-    <tr key={table.table_id}>
-      <td>{table.table_name}</td>
-      <td>{table.capacity}</td>
-      <td data-table-id-status={table.table_id}>
-        {table.reservation_id ? "Occupied" : "Free"}
-      </td>
-      {table.reservation_id ? (
-        <td
-          type="button"
-          className="btn btn-finish"
-          data-table-id-finish={table.table_id}
-          onClick={handleFinish}
-        >
-          Finish
+    <>
+      <tr key={table.table_id}>
+        <td className="rowBorder">{table.table_name}</td>
+        <td className="rowBorder">{table.capacity}</td>
+        <td className="rowBorder" data-table-id-status={table.table_id}>
+          {table.reservation_id ? "Occupied" : "Free"}
         </td>
-      ) : (
-        <td></td>
-      )}
-    </tr>
+      </tr>
+      <tr>
+        {table.reservation_id ? (
+          <td colSpan="3">
+            <button
+            type="button"
+            className="btn btn-outline-success btn-block"
+            data-table-id-finish={table.table_id}
+            onClick={handleFinish}
+          >
+            <span className="oi oi-account-logout"></span>
+            &nbsp;&nbsp;&nbsp;Finish
+            </button>
+          </td>
+        ) : (
+          <td colSpan="3"></td>
+        )}
+      </tr>
+    </>
   );
 }
 

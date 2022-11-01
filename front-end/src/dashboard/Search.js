@@ -2,11 +2,12 @@ import React, { useState } from "react";
 import Reservations from "./Reservations";
 import { listReservations } from "../utils/api";
 import ErrorAlert from "../layout/ErrorAlert";
+import "../App.css";
 
 function Search() {
   const startSearch = { mobile_number: "" };
   const [newSearch, setNewSearch] = useState({ ...startSearch });
-  const [search, setSearch] = useState({...startSearch})
+  const [search, setSearch] = useState({ ...startSearch });
 
   const [reservations, setReservations] = useState([]);
   const [reservationErrors, setReservationErrors] = useState(null);
@@ -43,7 +44,11 @@ function Search() {
   );
 
   const reservationList = reservations.map((reservation) => (
-    <Reservations reservations={reservation} key={reservation.reservation_id} loadDashboard={loadDashboard}/>
+    <Reservations
+      reservations={reservation}
+      key={reservation.reservation_id}
+      loadDashboard={loadDashboard}
+    />
   ));
 
   const displayReservationByMobileNumber = reservations.length ? (
@@ -67,29 +72,41 @@ function Search() {
 
   return (
     <div>
-      <h1>Search</h1>
+      <div className="container">
+        <h1 className="row dashHeading">Search Reservations</h1>
+      </div>
       <div>{showReservationErrors}</div>
       <div>
         <form className="form" onSubmit={handleFind}>
-          <div>
-            <label name="find">Mobile Number</label>
-            <input
-              name="mobile_number"
-              placeholder="Enter a customer's phone number"
-              onChange={handleChange}
-              value={newSearch.mobile_number}
-              required
-            />
+          <div className="row">
+            {" "}
+            <div className="col-4">
+              <label name="find">Mobile Number</label>
+            </div>
+            <div className="col-8">
+              <input
+                name="mobile_number"
+                placeholder="Enter a customer's phone number"
+                onChange={handleChange}
+                value={newSearch.mobile_number}
+                required
+              />
+            </div>
           </div>
-          <div>
-            <button type="submit" className="btn btn-find">
-              Find
-            </button>
+          <div className="row">
+            <div className="col-sm">
+              <button type="submit" className="btn btn-info btn-block mr-2">
+                <span className="oi oi-magnifying-glass"></span>
+                &nbsp; Find
+              </button>
+            </div>
           </div>
         </form>
         <div className="row">
-          <div>
-            <div>{displayReservationByMobileNumber}</div>
+          <div className="container">
+            <div className="row dashHeading">
+              {displayReservationByMobileNumber}
+            </div>
           </div>
         </div>
       </div>

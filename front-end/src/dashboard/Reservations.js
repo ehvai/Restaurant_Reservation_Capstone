@@ -29,48 +29,56 @@ function Reservations({ reservations, loadDashboard }) {
 
   // mapping through the reservation list to create the table of selected day reservations based on loadDashboard results
   return (
-    <tr key={reservation_id}>
-      <td>{reservation_id}</td>
-      <td>
-        {last_name}, {first_name}
-      </td>
-      <td>{mobile_number}</td>
-      <td>{reservation_date}</td>
-      <td>{reservation_time}</td>
-      <td>{people}</td>
-      <td data-reservation-id-status={reservation_id}>{status}</td>
-      <td>
-        {status === "booked" && (
-          <a
-            href={`/reservations/${reservation_id}/seat`}
-            className="btn btn-seat"
-          >
-            Seat
-          </a>
-        )}
-      </td>
-      <td>
-        {status === "booked" && (
-          <a
-            href={`/reservations/${reservation_id}/edit`}
-            className="btn btn-edit"
-          >
-            Edit
-          </a>
-        )}
-      </td>
-      <td>
-        {status === "booked" && (
-          <button
-            data-reservation-id-cancel={reservation_id}
-            className="btn btn-cancel"
-            onClick={handleCancel}
-          >
-            Cancel
-          </button>
-        )}
-      </td>
-    </tr>
+    <>
+      <tr key={reservation_id}>
+        <td className="rowBorder">{reservation_id}</td>
+        <td className="rowBorder">
+          {last_name}, {first_name}
+        </td>
+        <td className="rowBorder">{mobile_number}</td>
+        <td className="rowBorder">{reservation_date}</td>
+        <td className="rowBorder">{reservation_time}</td>
+        <td className="rowBorder">{people}</td>
+        <td data-reservation-id-status={reservation_id} className="rowBorder">{status}</td>
+      </tr>
+      <tr>
+        <td></td>
+        <td colSpan="2">
+          {status === "booked" && (
+            <a
+              href={`/reservations/${reservation_id}/seat`}
+              className="btn btn-outline-success btn-block"
+            >
+              <span className="oi oi-account-login"></span>
+              &nbsp;&nbsp;&nbsp;Seat
+            </a>
+          )}
+        </td>
+        <td colSpan="2">
+          {status === "booked" && (
+            <a
+              href={`/reservations/${reservation_id}/edit`}
+              className="btn btn-outline-info btn-block"
+            >
+              <span className="oi oi-text"></span>
+              &nbsp;&nbsp;&nbsp;Edit
+            </a>
+          )}
+        </td>
+        <td colSpan="2">
+          {status === "booked" && (
+            <button
+              data-reservation-id-cancel={reservation_id}
+              className="btn btn-outline-secondary btn-block"
+              onClick={handleCancel}
+            >
+              <span className="oi oi-circle-x"></span>
+              &nbsp;&nbsp;&nbsp;Cancel
+            </button>
+          )}
+        </td>
+      </tr>
+    </>
   );
 }
 

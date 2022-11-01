@@ -1,5 +1,5 @@
 form {
-    border: 2px solid grey;
+    border: 10px solid #17A2B8 ;
     padding: 10px;
   }
   
@@ -22,6 +22,29 @@ flex: 2;
 }
 
 .dashHeading{
-  flex: 2
+  justify-content: center
 }
 
+td, th{
+  text-align: center
+}
+
+tr{
+  border: 1px solid
+}
+
+.rowBorder{
+  border: 1px dotted
+}
+
+.tables{
+  width: 100%
+}
+
+.reservations{
+  width: 100%
+}
+
+.seatTable{
+  border: 2px solid #17A2B8
+}

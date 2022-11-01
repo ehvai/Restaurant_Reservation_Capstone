@@ -42,7 +42,7 @@ function NewReservation() {
       `${newReservation.reservation_date}T${newReservation.reservation_time}:00`
     );
     const [hours, minutes] = newReservation.reservation_time.split(":");
-    newReservation.people = Number(newReservation.people)
+    newReservation.people = Number(newReservation.people);
 
     if (Date.now() > Date.parse(reservationDate)) {
       errors.push({ message: `The reservation cannot be in the past` });
@@ -77,7 +77,9 @@ function NewReservation() {
 
   return (
     <div>
-      <h1>Create Reservation</h1>
+      <div className="container">
+        <h1 className="row dashHeading">Create Reservation</h1>
+      </div>
       {displayErrors}
       <ReservationForm
         formName="New Reservation"

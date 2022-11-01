@@ -58,7 +58,9 @@ function EditReservation() {
 
   return (
     <div>
-      <h1>Edit Reservation</h1>
+      <div className="container">
+        <h1 className="row dashHeading">Edit Reservation</h1>
+      </div>
       {showErrors}
       <ReservationForm
         formName="Edit Reservation"
