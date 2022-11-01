@@ -20,7 +20,6 @@ function NewReservation() {
     ...initialReservation,
   });
   const history = useHistory();
-  console.log("resStart: ", newReservation)
 
   const [reservationErrors, setReservationErrors] = useState([]);
 
@@ -72,7 +71,6 @@ function NewReservation() {
     return () => abortController.abort();
   };
 
-  console.log("resEnd: ", newReservation)
   let displayErrors = reservationErrors.map((error) => (
     <ErrorAlert key={error.message} error={error} />
   ));

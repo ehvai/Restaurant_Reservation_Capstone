@@ -11,6 +11,7 @@ import NewReservation from "../reservations/NewReservation";
 import NewTable from "../tables/NewTable"
 import Seat from "../components/Seat"
 import Search from "../dashboard/Search";
+import EditReservation from "../reservations/EditReservation";
 
 
 /**
@@ -42,6 +43,9 @@ function Routes() {
       </Route>
       <Route path="/reservations/:reservation_id/seat">
         <Seat />
+      </Route>
+      <Route path="/reservations/:reservation_id/edit">
+        <EditReservation />
       </Route>
       <Route path="/dashboard">
         <Dashboard date={date ? date: today()} />

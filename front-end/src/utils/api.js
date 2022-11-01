@@ -80,7 +80,7 @@ export async function listTables(signal) {
 */
 
 export async function readReservation(reservation_id, signal) {
-  const url = new URL(`${API_BASE_URL}/reservations/${reservation_id}/seat`);
+  const url = new URL(`${API_BASE_URL}/reservations/${reservation_id}`);
 
   return await fetchJson(url, { headers, signal })
     .then(formatReservationDate)
@@ -97,6 +97,21 @@ export async function createReservation(newReservation, signal) {
     method: "POST",
     headers,
     body: JSON.stringify({ data: newReservation }),
+    signal,
+  };
+  return await fetchJson(url, options);
+}
+
+/**
+ * Update reservation
+ */
+
+ export async function updateReservation(editReservation, reservation_id, signal) {
+  const url = new URL(`${API_BASE_URL}/reservations/${reservation_id}`);
+  const options = {
+    method: "PUT",
+    headers,
+    body: JSON.stringify({ data: editReservation }),
     signal,
   };
   return await fetchJson(url, options);

@@ -1,5 +1,5 @@
 import React from "react";
-import { useHistory } from "react-router-dom"
+import { useHistory } from "react-router-dom";
 
 function ReservationForm({
   formName,
@@ -7,8 +7,7 @@ function ReservationForm({
   handleChange,
   reservation,
 }) {
-
-  const history=useHistory()
+  const history = useHistory();
 
   return (
     <div>

@@ -24,7 +24,7 @@ function Tables({ table, loadDashboard }) {
       {table.reservation_id ? (
         <td
           type="button"
-          className="btn btn-outline-secondary"
+          className="btn btn-finish"
           data-table-id-finish={table.table_id}
           onClick={handleFinish}
         >
