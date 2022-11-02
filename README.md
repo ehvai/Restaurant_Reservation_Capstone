@@ -19,18 +19,12 @@ This project's purpose is to showcase my ability to update a webpage from a very
 #
 ## Skills and Technologies Used
 
-### Frontend:
-* JavaScript 
-* HTML
-* CSS
-* Bootstrap
-* React
-
-### Backend:
-* Node.js 
-* Express
-* Knex 
-* Cors
+| ### Frontend | ### Backend |
+| JavaScript | Node.js |
+| HTML | Express |
+| CSS | Knex |
+| Bootstrap | Cors |
+| React | - |
 
 #
 ## Setup and Installation:
@@ -64,7 +58,7 @@ Once the code was functional and a very basic dashboard was working, I deployed 
 
 ### Reservations Table
 
-The `reservations` table represents reservations to the restaurant. Each reservation has the following fields:
+The `reservations` table represents reservations to the restaurant and has the following fields:
 
 - `reservation_id`: (Primary Key)
 - `first_name`: (String) The first name of the customer.
@@ -75,7 +69,7 @@ The `reservations` table represents reservations to the restaurant. Each reserva
 - `people`: (Integer) The size of the party.
 - `Status`: (String) The reservation status can be _booked, seated, finished, or cancelled_ and defaults to _booked._
 
-An example record looks like the following:
+An example record:
 
 ```json
   {
@@ -91,7 +85,7 @@ An example record looks like the following:
 
 ### Tables Table
 
-The `tables` table represents the tables that are available in the restaurant. Each table has the following fields:
+The `tables` table represents the tables that are available in the restaurant and has the following fields:
 
 - `table_id`: (Primary Key)
 - `table_name`: (String) The name of the table.
@@ -109,17 +103,17 @@ An example record looks like the following:
 ```
 ### Routes
 
-The API allows for the following routes:
+The API has the following routes:
 
 Method | Route | Description
  -|-|-
-| `GET` | `/dashboard` | List all reservations for current date aswell as tables.
-| `GET` | `/dashboard?date=YYYY-MM-DD` | List all reservations on query date.
-| `POST` | `/reservations/new` | Create a new reservation. No `reservation_id` or `status` should be provided. All other fields are required.
+| `GET` | `/dashboard` | List all reservations for current date as well as tables.
+| `GET` | `/dashboard?date=YYYY-MM-DD` | List all reservations based on query date.
+| `POST` | `/reservations/new` | Creates a new reservation. `reservation_id` or `status` should not be included but all other fields are required.
 | `PUT` | `/reservations/:reservation_id/edit` | Update a specific reservation `by reservation_id`.
-| `POST` | `/tables/new` | Create new table. Only `table_name` and `capacity` should be provided.
-| `PUT` | `/:table_id/seat` | Assign a table to a reservation and change that reservation's `status` to _seated_. Body should contain only a `reservation_id`.
-| `DELETE` | `/:table_id/seat` | Removes a reservation from a table and changes reservation's `status` to _finished_
+| `POST` | `/tables/new` | Creates a new table. `table_name` and `capacity` are required.
+| `PUT` | `/:table_id/seat` | Assigns a table to a reservation and changes that reservation `status` to _seated_. Body should only contain `reservation_id`.
+| `DELETE` | `/:table_id/seat` | Removes a reservation from a table and changes reservation `status` to _finished_
 
 #
 ## Screenshots
