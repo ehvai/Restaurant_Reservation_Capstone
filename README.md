@@ -13,7 +13,7 @@ This project's purpose is to showcase my ability to update a webpage from a very
 #
 ## Final Deployment
 
-On Render.com: https://restaurant-reservation-client-bnq8.onrender.com
+[On Render.com: https://restaurant-reservation-client-bnq8.onrender.com
 Github Code: https://github.com/ehvai/Restaurant_Reservation_Capstone
 
 #
@@ -129,38 +129,38 @@ Method | Route | Description
 The Dashboard displays the list of reservations for the selected date along with all the tables and their current status.
 
 path = '/dashboard'
-![dashboard]
+![dashboard](https://github.com/ehvai/Restaurant_Reservation_Capstone/blob/main/screenshots/dashboard.png)
 
-## Create and Edit Reservations
+### Create and Edit Reservations
 
 The Create and Edit Reservations are two separate actions but they use the same base ReservationForm component.
 
 path = '/reservations/new'
-![createReservation]
+![createReservation](https://github.com/ehvai/Restaurant_Reservation_Capstone/blob/main/screenshots/createReservation.png)
 
 The Edit Reservation requires the reservation ID.
 
 path='/reservations/:reservation_id/edit'
-![editReservation]
+![editReservation](https://github.com/ehvai/Restaurant_Reservation_Capstone/blob/main/screenshots/editReservation.png)
 
-## Create Table
+### Create Table
 
 The Create Table lets you input a table name with the capacity for the table.
 
 path = '/tables/new'
-![createTable]
+![createTable](https://github.com/ehvai/Restaurant_Reservation_Capstone/blob/main/screenshots/createTable.png)
 
-## Search
+### Search
 
 The Search component lets you search the reservations by phone number and lists any that match even a part of the inputted number.
 
 path = '/search'
-![search]
+![search](https://github.com/ehvai/Restaurant_Reservation_Capstone/blob/main/screenshots/search.png)
 
-## Seat Reservation to Table
+### Seat Reservation to Table
 
 This is the Seat component.  This allows the user to seat a reservation at an open table.
 
 path = '/reservations/:reservation_id/seat'
-![seatReservationToTable]
+![seatReservationToTable](https://github.com/ehvai/Restaurant_Reservation_Capstone/blob/main/screenshots/seatReservationToTable.png)
 
