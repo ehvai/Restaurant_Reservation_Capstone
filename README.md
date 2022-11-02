@@ -19,7 +19,7 @@ This project's purpose is to showcase my ability to update a webpage from a very
 #
 ## Skills and Technologies Used
 
-### Frontend | ### Backend
+ Frontend | Backend
 -|-|-
 | JavaScript | Node.js
 | HTML | Express
