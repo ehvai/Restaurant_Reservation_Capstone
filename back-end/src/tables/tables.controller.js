@@ -7,7 +7,6 @@ const reservationService = require("../reservations/reservations.service")
 const asyncErrorBoundary = require("../errors/asyncErrorBoundary");
 const hasProperties = require("../validations/hasProperties");
 const tableIdExists = require("../validations/tableIdExists");
-const reservationIdExists = require("../validations/reservationIdExists");
 
 // validations
 const REQUIRED_PROPERTIES = ["table_name", "capacity"];
@@ -28,6 +27,20 @@ function hasOnlyValidProperties(req, res, next) {
     });
   }
   next();
+}
+
+async function reservationIdExists(req, res, next) {
+  const resId = req.body.data.reservation_id
+  const reservation = await reservationService.read(resId);
+
+  if (reservation) {
+    res.locals.reservation =  reservation;
+    return next();
+  }
+  return next({
+    status: 404,
+    message: `${req.body.data.reservation_id} not found`,
+  });
 }
 
 function hasValidValues(req, res, next) {
