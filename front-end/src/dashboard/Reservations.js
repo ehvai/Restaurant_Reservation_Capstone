@@ -13,6 +13,7 @@ function Reservations({ reservations, loadDashboard }) {
     status,
   } = reservations;
 
+  // cancels the reservation
   const handleCancel = () => {
     if (
       window.confirm(

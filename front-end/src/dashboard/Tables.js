@@ -3,6 +3,8 @@ import { finishTable } from "../utils/api";
 import "../App.css";
 
 function Tables({ table, loadDashboard }) {
+
+  // when a reservation completes the meal and leaves the table, this clears out the table making it available again
   function handleFinish() {
     if (
       window.confirm(

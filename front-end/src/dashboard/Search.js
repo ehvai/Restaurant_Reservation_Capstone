@@ -12,6 +12,7 @@ function Search() {
   const [reservations, setReservations] = useState([]);
   const [reservationErrors, setReservationErrors] = useState(null);
 
+
   function loadDashboard() {
     const abortController = new AbortController();
     setReservationErrors(null);
@@ -43,6 +44,8 @@ function Search() {
     <ErrorAlert error={reservationErrors} />
   );
 
+
+  // map through the reservations to get each reservation from the Reservations.js file
   const reservationList = reservations.map((reservation) => (
     <Reservations
       reservations={reservation}
@@ -51,6 +54,7 @@ function Search() {
     />
   ));
 
+  // if there are any reservations, it will show the header and reservations.  If there is no reservation found, it will show no reservation found.
   const displayReservationByMobileNumber = reservations.length ? (
     <table className="table">
       <thead>
