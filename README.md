@@ -13,8 +13,8 @@ This project's purpose is to showcase my ability to update a webpage from a very
 #
 ## Final Deployment
 
-[On Render.com: https://restaurant-reservation-client-bnq8.onrender.com
-Github Code: https://github.com/ehvai/Restaurant_Reservation_Capstone
+* On Render.com: https://restaurant-reservation-client-bnq8.onrender.com
+* Github Code: https://github.com/ehvai/Restaurant_Reservation_Capstone
 
 #
 ## Skills and Technologies Used
