@@ -27,7 +27,6 @@ function Reservations({ reservations, loadDashboard }) {
     }
   };
 
-  // mapping through the reservation list to create the table of selected day reservations based on loadDashboard results
   return (
     <>
       <tr key={reservation_id}>
