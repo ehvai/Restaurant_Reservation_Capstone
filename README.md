@@ -19,12 +19,13 @@ This project's purpose is to showcase my ability to update a webpage from a very
 #
 ## Skills and Technologies Used
 
-| ### Frontend | ### Backend |
-| JavaScript | Node.js |
-| HTML | Express |
-| CSS | Knex |
-| Bootstrap | Cors |
-| React | - |
+### Frontend | ### Backend
+-|-|-
+| JavaScript | Node.js
+| HTML | Express
+| CSS | Knex
+| Bootstrap | Cors
+| React |
 
 #
 ## Setup and Installation:
