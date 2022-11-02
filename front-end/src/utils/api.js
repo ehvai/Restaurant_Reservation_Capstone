@@ -161,6 +161,10 @@ export async function finishTable(table_id) {
   return await fetchJson(url, options)
 }
 
+/**
+ *  Sets the status for a table based on the paramater status passed through.
+ */
+
 export async function setStatus(reservation_id, status, signal) {
   const url = new URL(`${API_BASE_URL}/reservations/${reservation_id}/status`);
   const options = {

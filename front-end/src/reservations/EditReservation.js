@@ -40,6 +40,7 @@ function EditReservation() {
     });
   };
 
+  // formats the people in the reservation so that it is a number
   const formattedReservation = {...editReservation, people: Number(editReservation.people)}
 
   // submit for the reservation edit
@@ -54,6 +55,7 @@ function EditReservation() {
     return () => abortController.abort();
   };
 
+  // checks if there are any errors, and if there are, it shows them above the reservations form
   const showErrors = reservationErrors && <ErrorAlert error={reservationErrors} />
 
   return (

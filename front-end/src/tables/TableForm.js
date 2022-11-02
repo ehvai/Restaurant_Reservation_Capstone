@@ -2,6 +2,10 @@ import React from "react";
 import { useHistory } from "react-router-dom";
 import "../App.css";
 
+/**
+ * This is the generic table form for creating tables.  Allows for edit tables at a later point if requested.
+ */
+
 function TableForm({
   formName,
   handleChange,

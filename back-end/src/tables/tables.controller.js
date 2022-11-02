@@ -1,7 +1,3 @@
-/**
- * List handler for reservation resources
- */
-
 const service = require("./tables.service");
 const reservationService = require("../reservations/reservations.service")
 const asyncErrorBoundary = require("../errors/asyncErrorBoundary");
