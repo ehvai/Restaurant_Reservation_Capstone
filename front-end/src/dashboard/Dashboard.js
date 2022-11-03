@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { listReservations, listTables } from "../utils/api";
 import useQuery from "../utils/useQuery";
-import { previous, next } from "../utils/date-time";
+import { previous, next, today } from "../utils/date-time";
 import { useHistory } from "react-router-dom";
 import Tables from "./Tables";
 import Reservations from "./Reservations";
@@ -21,14 +21,6 @@ function Dashboard({ date }) {
   const [tablesError, setTablesError] = useState(null);
   const history = useHistory();
 
-  // getting the current day in YYYY-MM-DD format
-  const today = new Date().toJSON().slice(0, 10);
-
-  // determine the date from the parameters if provided
-  const query = useQuery();
-  const dateQuery = query.get("date");
-  const [dashDate, setDashDate] = useState(dateQuery ? dateQuery : today);
-
   useEffect(loadDashboard, [date]);
 
   function loadDashboard() {
@@ -45,20 +37,17 @@ function Dashboard({ date }) {
   // Previous, Today and Next button functionality
   const handlePrevious = (event) => {
     event.preventDefault();
-    history.push(`/dashboard?date=${previous(dashDate)}`);
-    setDashDate(previous(dashDate));
+    history.push(`/dashboard?date=${previous(date)}`);
   };
 
   const handleNext = (event) => {
     event.preventDefault();
-    history.push(`/dashboard?date=${next(dashDate)}`);
-    setDashDate(next(dashDate));
+    history.push(`/dashboard?date=${next(date)}`);
   };
 
   const handleToday = (event) => {
     event.preventDefault();
-    setDashDate(today);
-    history.push(`/dashboard?date=${today}`);
+    history.push(`/dashboard?date=${today()}`);
   };
 
   const tableList = tables.map((table) => (
