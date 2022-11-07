@@ -29,7 +29,9 @@ function Search() {
     });
   };
 
-  const handleFind = async (event) => {
+  console.log(newSearch)
+
+  const handleFind = (event) => {
     event.preventDefault();
     const abortController = new AbortController();
     setReservationErrors(null);
