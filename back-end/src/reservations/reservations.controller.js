@@ -56,8 +56,10 @@ function validateReservationDate(req, res, next) {
   const {
     data: { reservation_date, reservation_time },
   } = req.body;
+  const [hours, minutes] = reservation_time.split(":")
+  const UTCHours = Number(hours) + 5
   const reservationDate = new Date(
-    `${reservation_date}T${reservation_time}:00`
+    `${reservation_date}T${UTCHours}:${minutes}:00.000Z`
   );
   try {
     if (Date.now() > Date.parse(reservationDate)) {
