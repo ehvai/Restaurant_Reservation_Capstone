@@ -61,13 +61,14 @@ function validateReservationDate(req, res, next) {
   const reservationDate = new Date(
     `${reservation_date}T${UTCHours}:${minutes}:00.000Z`
   );
+  const reservationDay = new Date(`${reservation_date}T${reservation_time}:00.000Z`)
   try {
     if (Date.now() > Date.parse(reservationDate)) {
       const error = new Error(`Reservation must be for a future date or time`);
       error.status = 400;
       throw error;
     }
-    if (reservationDate.getDay() == 2) {
+    if (reservationDay.getDay() == 2) {
       const error = new Error(`We are closed on Tuesdays`);
       error.status = 400;
       throw error;
