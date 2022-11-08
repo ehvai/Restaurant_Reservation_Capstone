@@ -18,7 +18,7 @@ function EditReservation() {
   const history = useHistory();
   const { reservation_id } = useParams();
 
-  const [reservationErrors, setReservationErrors] = useState(null);
+  const [reservationErrors, setReservationErrors] = useState([]);
   const [editReservation, setEditReservation] = useState({
     ...initialReservation,
   });
@@ -40,13 +40,46 @@ function EditReservation() {
     });
   };
 
-  // formats the people in the reservation so that it is a number
-  const formattedReservation = {...editReservation, people: Number(editReservation.people)}
-
   // submit for the reservation edit
   const handleSubmit = (event) => {
     event.preventDefault();
+    const errors = [];
     const abortController = new AbortController();
+
+  // formats the people in the reservation so that it is a number
+  const formattedReservation = {...editReservation, people: Number(editReservation.people)}
+  
+  //formats the time so it includes the :00 at the end
+  const [hours, minutes] = formattedReservation.reservation_time.split(":")
+  const reservationTime = `${hours}:${minutes}:00`
+  formattedReservation.reservation_time = reservationTime
+
+  const UTCHours = Number(hours) + 5
+  const reservationDate = new Date(
+    `${formattedReservation.reservation_date}T${UTCHours}:${minutes}:00.000Z`
+  );
+    if (Date.now() > Date.parse(reservationDate)) {
+      errors.push({ message: `The reservation cannot be in the past` });
+    }
+
+    const reservationDay = new Date(`${formattedReservation.reservation_date}T${formattedReservation.reservation_time}`)
+    if (reservationDay.getDay() === 2) {
+      errors.push({ message: `The restaurant is closed on Tuesdays` });
+    }
+
+    if ((hours <= 10 && minutes < 30) || hours <= 9) {
+      errors.push({ message: `We open at 10:30am` });
+    }
+    if ((hours >= 21 && minutes > 30) || hours >= 22) {
+      errors.push({ message: `We stop accepting reservations after 9:30pm` });
+    }
+    if (formattedReservation.people < 1) {
+      errors.push({ message: `Reservations must have at least 1 person` });
+    }
+
+    setReservationErrors(errors);
+
+    !errors.length &&
     updateReservation(formattedReservation, reservation_id, abortController.signal)
       .then(() =>
         history.push(`/dashboard?date=${formattedReservation.reservation_date}`)
@@ -55,15 +88,18 @@ function EditReservation() {
     return () => abortController.abort();
   };
 
+
   // checks if there are any errors, and if there are, it shows them above the reservations form
-  const showErrors = reservationErrors && <ErrorAlert error={reservationErrors} />
+  let displayErrors = reservationErrors.map((error) => (
+    <ErrorAlert key={error.message} error={error} />
+  ));
 
   return (
     <div>
       <div className="container">
         <h1 className="row dashHeading">Edit Reservation</h1>
       </div>
-      {showErrors}
+      {displayErrors}
       <ReservationForm
         formName="Edit Reservation"
         handleSubmit={handleSubmit}

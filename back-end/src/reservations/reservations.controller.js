@@ -212,6 +212,8 @@ module.exports = {
     asyncErrorBoundary(reservationIdExists),
     validateProperties,
     validStatus,
+    validateReservationDate,
+    validateReservationTime,
     asyncErrorBoundary(update),
   ],
 };
